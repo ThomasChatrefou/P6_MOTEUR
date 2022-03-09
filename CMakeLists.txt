@@ -6,6 +6,7 @@ set(SDL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/SDL/include)
 set(GLM_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/glm)
 
 add_executable(MyEngine main.cpp 
+	gc_3d_defs.hpp
 	MyApp.h MyApp.cpp
 	Camera.h Camera.cpp
 )

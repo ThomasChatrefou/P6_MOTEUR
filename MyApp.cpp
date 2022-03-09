@@ -11,52 +11,89 @@
 #include "Camera.h"
 
 
-MyApp::MyApp()
+namespace GC_3D
 {
-    windowsFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
-
-    win = SDL_CreateWindow("MyEngine",
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        1024,
-        768,
-        windowsFlags);
-
-    context = SDL_GL_CreateContext(win);
-
-    apprunning = false;
-}
-
-void MyApp::RunWithCameraMovement() 
-{
-    glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
-
-    Camera camera(position, target);
-}
-
-void MyApp::Run()
-{
-    apprunning = true;
-    while (apprunning)
+    MyApp::MyApp(int windowWidth, int windowHeight)
     {
-        SDL_GL_MakeCurrent(win, context);
-        SDL_Event curEvent;
+        _windowsFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 
+        _width = windowWidth;
+        _height = windowHeight;
+
+        _win = SDL_CreateWindow("MyEngine",
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            _width,
+            _height,
+            _windowsFlags);
+
+        _context = SDL_GL_CreateContext(_win);
+
+        _appRunning = false;
+    }
+
+    MyApp::~MyApp()
+    {
+
+    }
+
+    void MyApp::Run()
+    {
+        SDL_Init(SDL_INIT_VIDEO);
+        _appRunning = true;
+        while (_appRunning)
+        {
+            DrawTriangleWithMouseMotionEvent();
+        }
+    }
+
+    void MyApp::DrawTriangleWithMouseMotionEvent()
+    {
+        SDL_GL_MakeCurrent(_win, _context);
+
+        SDL_Event curEvent;
+        //AddUserEvent();
+        SeekForMouseMotionEvent(curEvent);
+
+        ResetWindow();
+
+        DrawTriangle(
+            vec3(1.0, 0.0, 0.0),
+            vec3(0.0, 1.0, 0.0),
+            vec3(0.0, 0.0, 0.0),
+            vec4(1.0, 1.0, 0.0, 1.0));
+
+        SDL_GL_SwapWindow(_win);
+    }
+
+    void MyApp::DrawTriangle(vec3 A, vec3 B, vec3 C, vec4 color)
+    {
+        glBegin(GL_TRIANGLES);
+        glColor4f(color.r, color.g, color.b, color.a);
+        glVertex3f(A.x, A.y, A.z);
+        glVertex3f(B.x, B.y, B.z);
+        glVertex3f(C.x, C.y, C.z);
+        glEnd();
+    }
+
+    void MyApp::AddUserEvent()
+    {
         SDL_Event user_event;
         user_event.type = SDL_USEREVENT;
         user_event.user.code = 2;
         user_event.user.data1 = NULL;
         user_event.user.data2 = NULL;
         SDL_PushEvent(&user_event);
+    }
 
-        while (SDL_PollEvent(&curEvent))
+    void MyApp::QuitEvent(SDL_Event& currentEvent)
+    {
+        while (SDL_PollEvent(&currentEvent))
         {
-            switch (curEvent.type)
+            switch (currentEvent.type)
             {
             case SDL_MOUSEMOTION:
-                printf("We got a motion event.\n");
-                printf("Current mouse position is: (%d, %d)\n", curEvent.motion.x, curEvent.motion.y);
+                printf("Current mouse position is: (%d, %d)\n", currentEvent.motion.x, currentEvent.motion.y);
                 break;
 
             default:
@@ -64,18 +101,66 @@ void MyApp::Run()
                 break;
             }
         }
-        glViewport(0, 0, 1024, 768);
+    }
+
+    void MyApp::SeekForMouseMotionEvent(SDL_Event &currentEvent)
+    {
+        while (SDL_PollEvent(&currentEvent))
+        {
+            switch (currentEvent.type)
+            {
+            case SDL_MOUSEMOTION:
+                printf("Current mouse position is: (%d, %d)\n", currentEvent.motion.x, currentEvent.motion.y);
+                break;
+
+            default:
+                printf("Unhandled Event!\n");
+                break;
+            }
+        }
+    }
+
+    void MyApp::ResetWindow() 
+    {
+        glViewport(0, 0, _width, _height);
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
-
         glColor4f(1.0, 1.0, 1.0, 1.0);
-        glBegin(GL_TRIANGLES);
-        glVertex3f(-1.0, 0.0, 0.0);
-        glVertex3f(0.0, 1.0, 0.0);
-        glVertex3f(1.0, 0.0, 0.0);
-
-        glEnd();
-
-        SDL_GL_SwapWindow(win);
     }
+
+    void MyApp::RotateCameraAroundOrigin()
+    {
+
+        SDL_GL_MakeCurrent(_win, _context);
+
+        SDL_Event curEvent;
+        //AddUserEvent();
+        SeekForMouseMotionEvent(curEvent);
+
+        ResetWindow();
+
+        DrawTriangle(
+            vec3(1.0, 0.0, 0.0),
+            vec3(0.0, 1.0, 0.0),
+            vec3(0.0, 0.0, 0.0),
+            vec4(1.0, 1.0, 0.0, 1.0));
+        DrawTriangle(
+            vec3(0.0, 1.0, 0.0),
+            vec3(0.0, 0.0, 1.0),
+            vec3(0.0, 0.0, 0.0),
+            vec4(0.0, 1.0, 1.0, 1.0));
+        DrawTriangle(
+            vec3(0.0, 0.0, 1.0),
+            vec3(1.0, 0.0, 0.0),
+            vec3(0.0, 0.0, 0.0),
+            vec4(1.0, 0.0, 1.0, 1.0));
+
+        SDL_GL_SwapWindow(_win);
+
+        vec3 position = vec3(0.0f, 0.0f, 3.0f);
+        vec3 target = vec3(0.0f, 0.0f, 0.0f);
+
+        Camera camera(position, target);
+    }
+
 }

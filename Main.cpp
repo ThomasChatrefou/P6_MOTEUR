@@ -3,19 +3,19 @@
 #include <windows.h>
 #endif 
 
+#include "gc_3d_defs.hpp"
 #include <gl/GL.h>
 #include <SDL.h>
 
 #include "MyApp.h"
 #include "Camera.h"
 
+using namespace GC_3D;
 
-int main(int argc, char* argv[]) 
+int main(int argc, char* argv[])
 {
-	SDL_Init(SDL_INIT_VIDEO);
-
-    MyApp app1;
-    app1.Run();
+	MyApp app1(1024,728);
+	app1.Run();
 
 	return 0;
 }

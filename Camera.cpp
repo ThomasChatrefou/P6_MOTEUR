@@ -9,11 +9,35 @@
 #include "Camera.h"
 
 
-Camera::Camera(glm::vec3 position, glm::vec3 target)
+namespace GC_3D
 {
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    Camera::Camera(vec3 position, vec3 target)
+    {
+        _position = position;
+        _target = target;
+        _upGlobal = vec3(0.0f, 1.0f, 0.0f);
 
-    _forward = glm::normalize(_position - target);
-    _right = glm::normalize(glm::cross(up, _forward));
-    _up = glm::cross(_forward, _right);
+        _forward = glm::normalize(_target - _position);
+        _right = glm::normalize(glm::cross(_upGlobal, -_forward));
+        _up = glm::cross(-_forward, _right);
+
+        _view = lookAt(_position, _target, _upGlobal);
+    }
+
+    Camera::~Camera() 
+    {
+
+    }
+
+    void Camera::Update(vec3 position, vec3 target) 
+    {
+        _position = position;
+        _target = target;
+
+        _forward = glm::normalize(_target - _position);
+        _right = glm::normalize(glm::cross(_upGlobal, -_forward));
+        _up = glm::cross(-_forward, _right);
+
+        _view = lookAt(_position, _target, _upGlobal);
+    }
 }
