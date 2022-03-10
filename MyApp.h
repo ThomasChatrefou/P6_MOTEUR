@@ -6,17 +6,24 @@ namespace GC_3D
 {
     class MyApp
     {
-    public:
-        MyApp(int windowWidth, int windowHeight);
-        ~MyApp();
-
     private:
-        uint32_t _windowsFlags;
+        bool _appRunning;
         int _width;
         int _height;
-        SDL_Window* _win;
+        SDL_Window* _window;
         SDL_GLContext _context;
-        bool _appRunning;
+
+    public:
+        MyApp(int windowWidth, int windowHeight);
+        
+        int OnExecute();
+
+    public:
+        bool OnInit();
+        void OnEvent(SDL_Event* currentEvent);
+        void OnLoop();
+        void OnRender();
+        void OnCleanup();
 
     public:
         void Run();

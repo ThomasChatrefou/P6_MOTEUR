@@ -15,27 +15,86 @@ namespace GC_3D
 {
     MyApp::MyApp(int windowWidth, int windowHeight)
     {
-        _windowsFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
-
+        _appRunning = true;
         _width = windowWidth;
         _height = windowHeight;
-
-        _win = SDL_CreateWindow("MyEngine",
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
-            _width,
-            _height,
-            _windowsFlags);
-
-        _context = SDL_GL_CreateContext(_win);
-
-        _appRunning = false;
+        _window = NULL;
+        _context = NULL;
     }
 
-    MyApp::~MyApp()
+    int MyApp::OnExecute() 
+    {
+        if (OnInit() == false)
+        {
+            return -1;
+        }
+
+        SDL_Event currentEvent;
+
+        while (_appRunning)
+        {
+            while (SDL_PollEvent(&currentEvent))
+            {
+                OnEvent(&currentEvent);
+            }
+
+            OnLoop();
+
+            OnRender();
+        }
+
+        OnCleanup();
+
+        return 0;
+    }
+
+    bool MyApp::OnInit()
+    {
+        if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
+
+        uint32_t windowsFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+
+        _window = SDL_CreateWindow("MyEngine",
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            _width,
+            _height,
+            windowsFlags);
+
+        if (_window == NULL) return false;
+
+        _context = SDL_GL_CreateContext(_window);
+
+        if (_context == NULL) return false;
+
+        if (SDL_GL_MakeCurrent(_window, _context) < 0) return false;
+        
+        return true;
+    }
+
+    void MyApp::OnEvent(SDL_Event* currentEvent)
+    {
+        if (currentEvent->type == SDL_QUIT)
+        {
+            _appRunning = false;
+        }
+    }
+
+    void MyApp::OnLoop()
     {
 
     }
+
+    void MyApp::OnRender()
+    {
+
+    }
+
+    void MyApp::OnCleanup()
+    {
+        SDL_Quit();
+    }
+
 
     void MyApp::Run()
     {
@@ -49,7 +108,6 @@ namespace GC_3D
 
     void MyApp::DrawTriangleWithMouseMotionEvent()
     {
-        SDL_GL_MakeCurrent(_win, _context);
 
         SDL_Event curEvent;
         //AddUserEvent();
@@ -63,7 +121,7 @@ namespace GC_3D
             vec3(0.0, 0.0, 0.0),
             vec4(1.0, 1.0, 0.0, 1.0));
 
-        SDL_GL_SwapWindow(_win);
+        SDL_GL_SwapWindow(_window);
     }
 
     void MyApp::DrawTriangle(vec3 A, vec3 B, vec3 C, vec4 color)
@@ -131,7 +189,7 @@ namespace GC_3D
     void MyApp::RotateCameraAroundOrigin()
     {
 
-        SDL_GL_MakeCurrent(_win, _context);
+        SDL_GL_MakeCurrent(_window, _context);
 
         SDL_Event curEvent;
         //AddUserEvent();
@@ -155,7 +213,7 @@ namespace GC_3D
             vec3(0.0, 0.0, 0.0),
             vec4(1.0, 0.0, 1.0, 1.0));
 
-        SDL_GL_SwapWindow(_win);
+        SDL_GL_SwapWindow(_window);
 
         vec3 position = vec3(0.0f, 0.0f, 3.0f);
         vec3 target = vec3(0.0f, 0.0f, 0.0f);

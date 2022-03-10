@@ -1,11 +1,18 @@
 #pragma once 
 
-#include <chrono>
+#ifdef _WIN32
+#include <windows.h>
+#endif 
 
+#include <iostream>
+#include <chrono>
+#include <vector>
+
+#include <gl/GL.h>
+#include <SDL.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include <vector>
 
 namespace GC_3D
 {
