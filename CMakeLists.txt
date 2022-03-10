@@ -7,8 +7,9 @@ set(GLM_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/glm)
 
 add_executable(MyEngine main.cpp 
 	gc_3d_defs.hpp
+	Geometry.h geometry-snippet.cpp
 	MyApp.h MyApp.cpp
-	Camera.h Camera.cpp
+	camera.hpp Camera.cpp
 )
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}

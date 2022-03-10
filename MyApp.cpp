@@ -8,7 +8,8 @@
 #include <glm/glm.hpp>
 
 #include "MyApp.h"
-#include "Camera.h"
+#include "Geometry.h"
+#include "camera.hpp"
 
 
 namespace GC_3D
@@ -69,6 +70,7 @@ namespace GC_3D
 
         if (SDL_GL_MakeCurrent(_window, _context) < 0) return false;
         
+        _start = _clock.now();
         return true;
     }
 
@@ -87,7 +89,71 @@ namespace GC_3D
 
     void MyApp::OnRender()
     {
+        ResetWindow();
 
+        vec4 A = vec4(1.0, 0.0, 0.0, 1.0);
+        vec4 B = vec4(0.0, 1.0, 0.0, 1.0);
+        vec4 C = vec4(0.0, 0.0, 0.0, 1.0);
+
+        mat4 model = mat4(1.0f);
+        mat4 view = mat4(1.0f);
+        mat4 proj = mat4(1.0f);
+        
+        auto now = _clock.now();
+        Duration timeStep = now - _start;
+        vec3 viewPos = vec3(0.5 + 3.0 * sin(timeStep.count() * 1E-9), 2.0, 0.5 + 3.0 * cos(timeStep.count() * 1E-9));
+
+        model = rotate(model, radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
+        view = lookAt(viewPos, vec3(0.5f,0.5f,0.5f), vec3(0.0f, 1.0f, 0.0f));
+        proj = perspective(radians(45.0f), (float)_width / (float)_height, 0.1f, 10.0f);
+     
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(value_ptr(proj));
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadMatrixf(value_ptr(view));
+
+        //glMultMatrixf(value_ptr(model));
+
+        vec4 color = vec4(1.0, 1.0, 0.0, 1.0);
+
+        Geometry geo;
+        geo.m_Pos =
+        {
+            vec3(0.0, 0.0, 0.0),
+            vec3(0.0, 0.0, 1.0),
+            vec3(0.0, 1.0, 0.0),
+            vec3(0.0, 1.0, 1.0),
+            vec3(1.0, 0.0, 0.0),
+            vec3(1.0, 0.0, 1.0),
+            vec3(1.0, 1.0, 0.0),
+            vec3(1.0, 1.0, 1.0)
+        };
+
+        geo.m_Indices =
+        {
+            3,1,2,
+            0,2,1,
+            4,6,0,
+            2,0,6,
+            5,4,7,
+            6,7,4,
+            3,5,7,
+            5,3,1,
+            2,6,3,
+            7,3,6,
+            0,4,1,
+            5,1,4
+        };
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+
+        geo.Bind();
+        geo.Draw();
+
+        SDL_GL_SwapWindow(_window);
     }
 
     void MyApp::OnCleanup()
@@ -116,15 +182,15 @@ namespace GC_3D
         ResetWindow();
 
         DrawTriangle(
-            vec3(1.0, 0.0, 0.0),
-            vec3(0.0, 1.0, 0.0),
-            vec3(0.0, 0.0, 0.0),
+            vec4(1.0, 0.0, 0.0, 1.0),
+            vec4(0.0, 1.0, 0.0, 1.0),
+            vec4(0.0, 0.0, 0.0, 1.0),
             vec4(1.0, 1.0, 0.0, 1.0));
 
         SDL_GL_SwapWindow(_window);
     }
 
-    void MyApp::DrawTriangle(vec3 A, vec3 B, vec3 C, vec4 color)
+    void MyApp::DrawTriangle(vec4 A, vec4 B, vec4 C, vec4 color)
     {
         glBegin(GL_TRIANGLES);
         glColor4f(color.r, color.g, color.b, color.a);
@@ -181,9 +247,8 @@ namespace GC_3D
     void MyApp::ResetWindow() 
     {
         glViewport(0, 0, _width, _height);
-        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        glColor4f(1.0, 1.0, 1.0, 1.0);
     }
 
     void MyApp::RotateCameraAroundOrigin()
@@ -196,29 +261,16 @@ namespace GC_3D
         SeekForMouseMotionEvent(curEvent);
 
         ResetWindow();
+        
 
-        DrawTriangle(
-            vec3(1.0, 0.0, 0.0),
-            vec3(0.0, 1.0, 0.0),
-            vec3(0.0, 0.0, 0.0),
-            vec4(1.0, 1.0, 0.0, 1.0));
-        DrawTriangle(
-            vec3(0.0, 1.0, 0.0),
-            vec3(0.0, 0.0, 1.0),
-            vec3(0.0, 0.0, 0.0),
-            vec4(0.0, 1.0, 1.0, 1.0));
-        DrawTriangle(
-            vec3(0.0, 0.0, 1.0),
-            vec3(1.0, 0.0, 0.0),
-            vec3(0.0, 0.0, 0.0),
-            vec4(1.0, 0.0, 1.0, 1.0));
+
 
         SDL_GL_SwapWindow(_window);
 
         vec3 position = vec3(0.0f, 0.0f, 3.0f);
         vec3 target = vec3(0.0f, 0.0f, 0.0f);
 
-        Camera camera(position, target);
+        //Camera camera(position, target);
     }
 
 }

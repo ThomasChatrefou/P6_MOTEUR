@@ -29,4 +29,10 @@ namespace GC_3D
   {
     return std::chrono::duration_cast<std::chrono::duration<float>>(iDuration).count();
   }
+
+  struct BoundingSphere
+  {
+      vec3 m_Center;
+      float m_Radius;
+  };
 }

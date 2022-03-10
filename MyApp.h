@@ -12,6 +12,8 @@ namespace GC_3D
         int _height;
         SDL_Window* _window;
         SDL_GLContext _context;
+        Clock _clock;
+        Clock::time_point _start;
 
     public:
         MyApp(int windowWidth, int windowHeight);
@@ -33,7 +35,7 @@ namespace GC_3D
         void QuitEvent(SDL_Event& currentEvent);
         void SeekForMouseMotionEvent(SDL_Event &currentEvent);
         void ResetWindow();
-        void DrawTriangle(vec3 A, vec3 B, vec3 C, vec4 color);
+        void DrawTriangle(vec4 A, vec4 B, vec4 C, vec4 color);
 
         void RotateCameraAroundOrigin();
     };
