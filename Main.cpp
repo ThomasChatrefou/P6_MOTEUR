@@ -1,7 +1,9 @@
-#include "gc_3d_defs.hpp"
+#include "includes.hpp"
 #include "MyApp.h"
 
+
 using namespace GC_3D;
+
 
 int main(int argc, char* argv[])
 {

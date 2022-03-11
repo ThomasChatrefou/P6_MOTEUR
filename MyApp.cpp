@@ -1,15 +1,16 @@
-#ifdef _WIN32
-#include <windows.h>
-#endif 
-
-#include <iostream>
-#include <gl/GL.h>
-#include <SDL.h>
-#include <glm/glm.hpp>
-
 #include "MyApp.h"
 #include "Geometry.h"
-#include "camera.hpp"
+#include "Camera.h"
+#include "Triangle.h"
+#include "shaders/LoadShader.hpp"
+#include "GetAppPath.h"
+
+
+#ifndef ShadersPath
+char* SHADERS_REPOSITORY_NAME = "shaders";
+char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
+char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
+#endif //ShaderPath
 
 
 namespace GC_3D
@@ -21,6 +22,12 @@ namespace GC_3D
         _height = windowHeight;
         _window = NULL;
         _context = NULL;
+        _programID = 0;
+        _matrixID = 0;
+
+        _camera = nullptr;
+        _triangle = nullptr;
+        _mvp = mat4(1.0f);
     }
 
     int MyApp::OnExecute() 
@@ -49,9 +56,18 @@ namespace GC_3D
         return 0;
     }
 
+
+    /***************************
+    * game execution functions *
+    ***************************/
+
     bool MyApp::OnInit()
     {
-        if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
+        if (SDL_Init(SDL_INIT_VIDEO) < 0) 
+        {
+            std::cout << "SDL init failed" << std::endl;
+            return false;
+        }
 
         uint32_t windowsFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 
@@ -62,14 +78,45 @@ namespace GC_3D
             _height,
             windowsFlags);
 
-        if (_window == NULL) return false;
+        if (_window == NULL) 
+        {
+            std::cout << "SDL window creation failed" << std::endl;
+            return false;
+        }
 
         _context = SDL_GL_CreateContext(_window);
 
-        if (_context == NULL) return false;
+        if (_context == NULL)
+        {
+            std::cout << "SDL context creation failed" << std::endl;
+            return false;
+        }
 
-        if (SDL_GL_MakeCurrent(_window, _context) < 0) return false;
+        if (SDL_GL_MakeCurrent(_window, _context) < 0)
+        {
+            std::cout << "OpenGL context setup failed" << std::endl;
+            return false;
+        }
         
+        glewExperimental = true; 
+        if (glewInit() != GLEW_OK)
+        {
+            std::cout << "Glew init failed" << std::endl;
+            return false;
+        }
+
+        if (!InitScene())
+        {
+            std::cout << "Scene init failed" << std::endl;
+            return false;
+        }
+
+        if (!InitShaders())
+        {
+            std::cout << "Shaders init failed" << std::endl;
+            return false;
+        }
+
         _start = _clock.now();
         return true;
     }
@@ -84,13 +131,102 @@ namespace GC_3D
 
     void MyApp::OnLoop()
     {
-
+        LoopScene();
     }
 
     void MyApp::OnRender()
     {
         ResetWindow();
 
+        RenderScene();
+
+        SDL_GL_SwapWindow(_window);
+    }
+
+    void MyApp::OnCleanup()
+    {
+        SDL_Quit();
+    }
+
+
+    /*****************
+    * tuto functions *
+    *****************/
+
+    bool MyApp::InitScene()
+    {
+        _camera = new Camera();
+        _camera->OnInit(
+            vec3(4.0f, 3.0f, 3.0f), 
+            vec3(0.0f, 0.0f, 0.0f), 
+            45.0f, 
+            (float)_width / (float)_height, 
+            0.1f, 
+            100.0f);
+
+        _triangle = new Triangle();
+        if (!_triangle->OnInit()) return false;
+
+        GLfloat data[9] = {
+            -1.0f, -1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f,
+            0.0f,  1.0f, 0.0f,
+        };
+        _triangle->SetVertex(data);
+        _triangle->SetBuffer();
+        _triangle->SetModelMatrix(mat4(1.0f));
+
+        mat4 proj = _camera->GetProjectionMatrix();
+        mat4 view = _camera->GetLookAtMatrix();
+        mat4 model = _triangle->GetModelMatrix();
+        _mvp = proj * view * model;
+
+        return true;
+    }
+
+    bool MyApp::InitShaders()
+    {
+        std::filesystem::path appPath(GetAppPath());
+        auto appDir = appPath.parent_path();
+        auto shaderPath = appDir / SHADERS_REPOSITORY_NAME;
+        auto vertexShaderPath = shaderPath / VERTEX_SHADERS_FILE_NAME;
+        auto fragmentShaderPath = shaderPath / FRAGMENT_SHADERS_FILE_NAME;
+
+        _programID = LoadShaders(vertexShaderPath.string().c_str(), fragmentShaderPath.string().c_str());
+        if (_programID == 0) return false;
+
+        _matrixID = glGetUniformLocation(_programID, "MVP");
+
+        return true;
+    }
+
+    void MyApp::LoopScene()
+    {
+        _triangle->OnLoop();
+        glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &_mvp[0][0]);
+
+    }
+
+    void MyApp::RenderScene()
+    {
+        glUseProgram(_programID);
+        _triangle->OnRender();
+    }
+
+    void MyApp::ResetWindow() 
+    {
+        glViewport(0, 0, _width, _height);
+        glClearColor(0.1f, 0.1f, 0.15f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+
+    /***********************
+    * old openGL functions *
+    ***********************/
+
+    void MyApp::DrawRotatingCube() 
+    {
         vec4 A = vec4(1.0, 0.0, 0.0, 1.0);
         vec4 B = vec4(0.0, 1.0, 0.0, 1.0);
         vec4 C = vec4(0.0, 0.0, 0.0, 1.0);
@@ -152,24 +288,6 @@ namespace GC_3D
 
         geo.Bind();
         geo.Draw();
-
-        SDL_GL_SwapWindow(_window);
-    }
-
-    void MyApp::OnCleanup()
-    {
-        SDL_Quit();
-    }
-
-
-    void MyApp::Run()
-    {
-        SDL_Init(SDL_INIT_VIDEO);
-        _appRunning = true;
-        while (_appRunning)
-        {
-            DrawTriangleWithMouseMotionEvent();
-        }
     }
 
     void MyApp::DrawTriangleWithMouseMotionEvent()
@@ -177,7 +295,7 @@ namespace GC_3D
 
         SDL_Event curEvent;
         //AddUserEvent();
-        SeekForMouseMotionEvent(curEvent);
+        OnMouseTrackingEvent(curEvent);
 
         ResetWindow();
 
@@ -210,7 +328,7 @@ namespace GC_3D
         SDL_PushEvent(&user_event);
     }
 
-    void MyApp::QuitEvent(SDL_Event& currentEvent)
+    void MyApp::OnMouseTrackingEvent(SDL_Event& currentEvent)
     {
         while (SDL_PollEvent(&currentEvent))
         {
@@ -226,51 +344,4 @@ namespace GC_3D
             }
         }
     }
-
-    void MyApp::SeekForMouseMotionEvent(SDL_Event &currentEvent)
-    {
-        while (SDL_PollEvent(&currentEvent))
-        {
-            switch (currentEvent.type)
-            {
-            case SDL_MOUSEMOTION:
-                printf("Current mouse position is: (%d, %d)\n", currentEvent.motion.x, currentEvent.motion.y);
-                break;
-
-            default:
-                printf("Unhandled Event!\n");
-                break;
-            }
-        }
-    }
-
-    void MyApp::ResetWindow() 
-    {
-        glViewport(0, 0, _width, _height);
-        glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-    }
-
-    void MyApp::RotateCameraAroundOrigin()
-    {
-
-        SDL_GL_MakeCurrent(_window, _context);
-
-        SDL_Event curEvent;
-        //AddUserEvent();
-        SeekForMouseMotionEvent(curEvent);
-
-        ResetWindow();
-        
-
-
-
-        SDL_GL_SwapWindow(_window);
-
-        vec3 position = vec3(0.0f, 0.0f, 3.0f);
-        vec3 target = vec3(0.0f, 0.0f, 0.0f);
-
-        //Camera camera(position, target);
-    }
-
 }
