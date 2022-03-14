@@ -6,6 +6,7 @@ namespace GC_3D
 {
     class Camera;
     class Triangle;
+    class Cube;
 
     class MyApp
     {
@@ -28,6 +29,7 @@ namespace GC_3D
 
         Camera* _camera;
         Triangle* _triangle;
+        Cube* _cube;
 
         mat4 _mvp;
 
@@ -37,13 +39,18 @@ namespace GC_3D
         void OnLoop();
         void OnRender();
         void OnCleanup();
-
-    public: // tuto functions
-        bool InitScene();
         bool InitShaders();
-        void LoopScene();
-        void RenderScene();
         void ResetWindow();
+
+    public: // tuto Triangle functions
+        bool InitTriangleScene();
+        void LoopTriangleScene();
+        void RenderTriangleScene();
+    
+    public: // tuto Cube functions
+        bool InitCubeScene();
+        void LoopCubeScene();
+        void RenderCubeScene();
 
     public: // old openGL functions
         void DrawRotatingCube();
