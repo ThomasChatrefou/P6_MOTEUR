@@ -6,6 +6,7 @@ namespace GC_3D
 {
     class Camera;
     class Triangle;
+    class Cube;
 
     class MyApp
     {
@@ -21,15 +22,18 @@ namespace GC_3D
         SDL_Window* _window;
         SDL_GLContext _context;
         GLuint _programID;
-        GLuint _matrixID;
+        GLuint _matrixTriangleID;
+        GLuint _matrixCubeID;
 
         Clock _clock;
-        Clock::time_point _start;
+        Timestamp _start;
 
         Camera* _camera;
         Triangle* _triangle;
+        Cube* _cube;
 
-        mat4 _mvp;
+        mat4 _mvpTriangle;
+        mat4 _mvpCube;
 
     public: // game execution functions
         bool OnInit();

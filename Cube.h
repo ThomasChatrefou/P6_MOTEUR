@@ -4,18 +4,18 @@
 
 namespace GC_3D
 {
-    class Triangle
+    class Cube
     {
     public:
-        Triangle();
-        ~Triangle();
+        Cube();
+        ~Cube();
 
     private:
-        GLuint _vertexArrayID; 
+        GLuint _vertexArrayID;
         GLuint _vertexBuffer;
         GLuint _colorBuffer;
-        GLfloat _vertexBufferData[9];
-        GLfloat _colorBufferData[9];
+        GLfloat _vertexBufferData[108];
+        GLfloat _colorBufferData[108];
 
         mat4 _model;
 
@@ -27,9 +27,8 @@ namespace GC_3D
     public:
         mat4 GetModelMatrix() { return _model; }
 
-        void SetVertex(GLfloat vertexData[9]);
-        void SetVertex(vec3 A, vec3 B, vec3 C);
-        void SetColor(GLfloat colorData[9]);
+        void SetVertex(GLfloat vertexData[108]);
+        void SetColor(GLfloat colorData[108]);
         void SetBuffer();
         void SetModelMatrix(mat4 model);
     };

@@ -16,6 +16,7 @@ add_executable(MyEngine main.cpp
 	MyApp.h MyApp.cpp
 	Camera.h Camera.cpp
 	Triangle.h Triangle.cpp
+	Cube.h Cube.cpp
 )
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}
