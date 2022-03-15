@@ -33,6 +33,8 @@ namespace GC_3D
 	void Cube::OnRender()
 	{
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+
 		glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
 		glVertexAttribPointer(
 			0,                  // must match the layout in the shader.
@@ -42,10 +44,7 @@ namespace GC_3D
 			0,                  // stride
 			(void*)0            // array buffer offset
 		);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // Starting from vertex 0; 3 vertices total
-		glDisableVertexAttribArray(0);
 
-		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, _colorBuffer);
 		glVertexAttribPointer(
 			1,                  // must match the layout in the shader.
@@ -55,6 +54,11 @@ namespace GC_3D
 			0,                  // stride
 			(void*)0            // array buffer offset
 		);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36); // Starting from vertex 0; 3 vertices total
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+
 	}
 
 	void Cube::SetVertex(GLfloat vertexData[108]) 
