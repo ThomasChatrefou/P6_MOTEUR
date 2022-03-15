@@ -56,6 +56,7 @@ namespace GC_3D
 		);
 
 		glDrawArrays(GL_TRIANGLES, 0, 36); // Starting from vertex 0; 3 vertices total
+
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 
