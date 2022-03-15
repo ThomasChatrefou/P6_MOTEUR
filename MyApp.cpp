@@ -82,6 +82,11 @@ namespace GC_3D
             _height,
             windowsFlags);
 
+        // Permet d'utiliser renderProfile
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
         if (_window == NULL) 
         {
             std::cout << "SDL window creation failed" << std::endl;

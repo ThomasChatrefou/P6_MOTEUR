@@ -4,3 +4,9 @@
 [submodule "dep/glm"]
 	path = dep/glm
 	url = https://github.com/g-truc/glm
+[submodule "dep/dep/imgui"]
+	path = dep/dep/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "dep/imgui"]
+	path = dep/imgui
+	url = https://github.com/ocornut/imgui
