@@ -24,8 +24,7 @@ namespace GC_3D
         _window = NULL;
         _context = NULL;
         _programID = 0;
-        _matrixTriangleID = 0;
-        _matrixCubeID = 0;
+        _matrixID = 0;
 
         _camera = nullptr;
         _triangle = nullptr;
@@ -303,8 +302,7 @@ namespace GC_3D
         _programID = LoadShaders(vertexShaderPath.string().c_str(), fragmentShaderPath.string().c_str());
         if (_programID == 0) return false;
 
-        _matrixTriangleID = glGetUniformLocation(_programID, "MVP");
-        _matrixCubeID = glGetUniformLocation(_programID, "MVP");
+        _matrixID = glGetUniformLocation(_programID, "MVP");
 
         return true;
     }
@@ -313,8 +311,7 @@ namespace GC_3D
     {
         _triangle->OnLoop();
         _cube->OnLoop();
-        glUniformMatrix4fv(_matrixTriangleID, 1, GL_FALSE, &_mvpTriangle[0][0]);
-        glUniformMatrix4fv(_matrixCubeID, 1, GL_FALSE, &_mvpCube[0][0]);
+        glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &_mvpTriangle[0][0]);
 
     }
 
@@ -336,8 +333,6 @@ namespace GC_3D
 
         model = _cube->GetModelMatrix();
         _mvpCube = proj * view * model;
-        
-
     }
 
     void MyApp::ResetWindow() 

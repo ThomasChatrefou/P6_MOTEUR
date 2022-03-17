@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.23)
 
 project(MyEngine)
 include(cmake/glew.cmake)
+include(cmake/assimp.cmake)
 add_subdirectory(dep/SDL dep/SDL)
 
 set(IMGUI_USE_OGL3 true)
@@ -37,6 +38,7 @@ add_executable(MyEngine main.cpp
 	Camera.h Camera.cpp
 	Triangle.h Triangle.cpp
 	Cube.h Cube.cpp
+	Mesh.h Mesh.cpp
 )
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}

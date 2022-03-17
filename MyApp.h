@@ -22,8 +22,7 @@ namespace GC_3D
         SDL_Window* _window;
         SDL_GLContext _context;
         GLuint _programID;
-        GLuint _matrixTriangleID;
-        GLuint _matrixCubeID;
+        GLuint _matrixID;
 
         Clock _clock;
         Timestamp _start;
