@@ -11,6 +11,10 @@ public:
 
 private:
     bool m_AppRunning;
+    int m_Width;
+    int m_Height;
+    SDL_Window* m_Window;
+    SDL_GLContext m_Context;
 
 public: // game execution functions
     bool OnInit();
@@ -18,4 +22,8 @@ public: // game execution functions
     void OnLoop();
     void OnRender();
     void OnCleanup();
+
+public:
+    bool Application::InitSDL();
+    bool Application::InitWindow();
 };

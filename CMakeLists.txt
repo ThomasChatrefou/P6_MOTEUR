@@ -36,6 +36,7 @@ add_executable(MyEngine			main.cpp
 	Buffer.hpp					Buffer.cpp
 	Camera.hpp					Camera.cpp
 	GUI.hpp						GUI.cpp
+	GetAppPath.hpp				GetAppPath.cpp
 	Mesh.hpp					Mesh.cpp
 	Renderer.hpp				Renderer.cpp
 	Scene.hpp					Scene.cpp
