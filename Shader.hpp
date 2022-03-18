@@ -9,8 +9,10 @@ public:
     unsigned int getID();
     void setID(unsigned int id);
     bool InitShaders();
-    void LoadAndCreateTexture();
+    void LoadAndCreateTexture(const char* m_texture1, const char* m_texture2);
     void BindTextures(unsigned int texture1, unsigned int texture2);
+
+
 
 public:
 	void UseShader();

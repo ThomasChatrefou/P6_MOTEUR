@@ -22,3 +22,9 @@ void Buffer::BindBufferToAttrib(int attribut, int size, int stride, int arrayOff
         (void*)arrayOffset            // array buffer offset
     );
 }
+
+void Buffer::Vao()
+{
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+}

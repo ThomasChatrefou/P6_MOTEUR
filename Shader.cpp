@@ -2,6 +2,7 @@
 #include "Shader.hpp"
 #include "stb_image.h"
 #include <filesystem>
+#include "GetAppPath.hpp"
 
 
 #ifndef ShadersPath
@@ -17,6 +18,8 @@ const char* const TEXTURE_SECOND_FILE_NAME = "container.jpg";
 //GETTER ------------------- SETTER
 unsigned int Shader::getID(){return m_ID;}
 void Shader::setID(unsigned int id){m_ID = id;}
+;
+
 
 /*bool Shader::InitShaders()
 {
@@ -36,6 +39,10 @@ void Shader::setID(unsigned int id){m_ID = id;}
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
 {
+
+
+
+
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
@@ -116,8 +123,9 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 }
 
 
-void Shader::LoadAndCreateTexture()
+void Shader::LoadAndCreateTexture(const char* m_texture1, const char* m_texture2)
 {
+
     unsigned int texture1, texture2;
     // texture 1
     // ---------
@@ -133,7 +141,7 @@ void Shader::LoadAndCreateTexture()
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(false); // tell stb_image.h to flip loaded texture's on the y-axis.
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char* data = stbi_load(std::filesystem::path()"Sprite/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load(m_texture1, &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -155,7 +163,7 @@ void Shader::LoadAndCreateTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image, create texture and generate mipmaps
-    data = stbi_load("D:/WKLEIN/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
+    data = stbi_load(m_texture2, &width, &height, &nrChannels, 0);
     if (data)
     {
         // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
