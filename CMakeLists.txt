@@ -37,10 +37,12 @@ add_executable(MyEngine			main.cpp
 	Camera.hpp					Camera.cpp
 	GUI.hpp						GUI.cpp
 	GetAppPath.hpp				GetAppPath.cpp
+	Inputs.hpp					Inputs.cpp
 	Mesh.hpp					Mesh.cpp
 	Renderer.hpp				Renderer.cpp
 	Scene.hpp					Scene.cpp
 	Shader.hpp					Shader.cpp
+	Time.hpp					Time.cpp
 )
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}
