@@ -7,9 +7,9 @@
 const char* const TEXTURE_REPOSITORY_NAME = "Sprite";
 const char* const TEXTURE_ONE_FILE_NAME = "awesomeface.png";
 const char* const TEXTURE_SECOND_FILE_NAME = "container.jpg";
-char* SHADERS_REPOSITORY_NAME = "shaders";
-char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
-char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
+const char* SHADERS_REPOSITORY_NAME = "shaders";
+const char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
+const char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
 
 Shader Renderer::CubeRendering()
 {
