@@ -4,16 +4,15 @@
 #include "Shader.hpp"
 #include "Actor.hpp"
 
+const char* const TEXTURE_REPOSITORY_NAME = "Sprite";
+const char* const TEXTURE_ONE_FILE_NAME = "awesomeface.png";
+const char* const TEXTURE_SECOND_FILE_NAME = "container.jpg";
+char* SHADERS_REPOSITORY_NAME = "shaders";
+char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
+char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
+
 Shader Renderer::CubeRendering()
 {
-
-
-	const char* const TEXTURE_REPOSITORY_NAME = "Sprite";
-	const char* const TEXTURE_ONE_FILE_NAME = "awesomeface.png";
-	const char* const TEXTURE_SECOND_FILE_NAME = "container.jpg";
-	char* SHADERS_REPOSITORY_NAME = "shaders";
-	char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
-	char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
 
 	std::filesystem::path appPath(GetAppPath());
 	auto appDir = appPath.parent_path();
@@ -28,7 +27,6 @@ Shader Renderer::CubeRendering()
 	auto fragmentShaderPath = shaderPath / FRAGMENT_SHADERS_FILE_NAME;
 
 	Shader shader = Shader(vertexShaderPath.string().c_str(), fragmentShaderPath.string().c_str());
-	shader.UseShader();
 	shader.LoadAndCreateTexture(texture1Path.string().c_str(), texture2Path.string().c_str());
 
 	return shader;
