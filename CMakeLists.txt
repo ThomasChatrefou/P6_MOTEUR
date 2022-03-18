@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 3.23)
 
 project(MyEngine)
@@ -14,24 +13,33 @@ set(ASSIMP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/dep/assimp)
 
 add_executable(MyEngine main.cpp 
 	Includes.hpp
-	shaders/LoadShader.hpp
+	LoadShader.hpp
 	GetAppPath.h GetAppPath.cpp
 	Geometry.h Geometry.cpp
 	MyApp.h MyApp.cpp
 	Camera.h Camera.cpp
 	Triangle.h Triangle.cpp
 	Cube.h Cube.cpp
+	LoadModel.cpp LoadModel.h
 )
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(${ASSIMP_ROOT} dep/assimp)
+
+set(ASSIMP_INCLUDE_DIR ${ASSIMP_ROOT}/include)
+
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}
 	${GLM_INCLUDE_DIR}
+	${ASSIMP_INCLUDE_DIR}
+
 )
-target_link_libraries(MyEngine PRIVATE SDL2main SDL2-static opengl32 glew)
+target_link_libraries(MyEngine PRIVATE SDL2main SDL2-static opengl32 glew assimp)
 
-add_custom_target(copy_shaders COMMAND ${CMAKE_COMMAND}
--E copy_directory ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:MyEngine>/shaders)
+add_custom_target(copy_resources COMMAND ${CMAKE_COMMAND}
+-E copy_directory ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:MyEngine>/resources)
 
-add_dependencies(MyEngine copy_shaders)
+add_dependencies(MyEngine copy_resources)
 
 set_property(TARGET MyEngine PROPERTY CXX_STANDARD 17)
 
@@ -63,9 +71,3 @@ target_include_directories(imgui PRIVATE
 if(${IMGUI_USE_OGL3})
 target_link_libraries(imgui glew)
 endif()
-
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-
-add_subdirectory(${ASSIMP_ROOT} dep/assimp)
-
-set(ASSIMP_INCLUDE_DIR ${ASSIMP_ROOT}/include)

@@ -3,12 +3,13 @@
 #include "Camera.h"
 #include "Cube.h"
 #include "Triangle.h"
-#include "shaders/LoadShader.hpp"
+#include "LoadShader.hpp"
 #include "GetAppPath.h"
 
 
+
 #ifndef ShadersPath
-char* SHADERS_REPOSITORY_NAME = "shaders";
+char* SHADERS_REPOSITORY_NAME = "resources/shaders";
 char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
 char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
 #endif //ShaderPath
@@ -80,6 +81,10 @@ namespace GC_3D
             _height,
             windowsFlags);
 
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_PROFILE_CORE);
+
         if (_window == NULL) 
         {
             std::cout << "SDL window creation failed" << std::endl;
@@ -118,6 +123,8 @@ namespace GC_3D
             std::cout << "Shaders init failed" << std::endl;
             return false;
         }
+
+        
 
         _start = _clock.now();
         return true;
@@ -231,17 +238,18 @@ namespace GC_3D
     {
         _camera = new Camera();
         _camera->OnInit(
-            vec3(4.0f, 3.0f, 3.0f), 
-            vec3(0.0f, 0.0f, 0.0f), 
-            45.0f, 
-            (float)_width / (float)_height, 
-            0.1f, 
+            vec3(4.0f, 3.0f, 3.0f),
+            vec3(0.0f, 0.0f, 0.0f),
+            45.0f,
+            (float)_width / (float)_height,
+            0.1f,
             100.0f);
 
         _cube = new Cube();
         if (!_cube->OnInit()) return false;
 
-        GLfloat data[] = {
+
+        /*GLfloat data[] = {
             -1.0f,-1.0f,-1.0f,
             -1.0f,-1.0f, 1.0f,
             -1.0f, 1.0f, 1.0f,
@@ -278,9 +286,9 @@ namespace GC_3D
              1.0f, 1.0f, 1.0f,
             -1.0f, 1.0f, 1.0f,
              1.0f,-1.0f, 1.0f
-        };
+        };*/
 
-        GLfloat dataColor[] = {
+        /*GLfloat dataColor[] = {
             0.583f,  0.771f,  0.014f,
             0.609f,  0.115f,  0.436f,
             0.327f,  0.483f,  0.844f,
@@ -317,11 +325,10 @@ namespace GC_3D
             0.673f,  0.211f,  0.457f,
             0.820f,  0.883f,  0.371f,
             0.982f,  0.099f,  0.879f
-        };
-
-        _cube->SetVertex(data);
-        _cube->SetColor(dataColor);
-        _cube->SetBuffer();
+        };*/
+        
+        //_cube->SetVertex(data);
+        //_cube->SetColor(dataColor);
         _cube->SetModelMatrix(mat4(1.0f));
 
         mat4 proj = _camera->GetProjectionMatrix();

@@ -11,7 +11,9 @@ namespace GC_3D
 		~Cube();
 
 	private:
+		GLuint _elementBuffer;
 		GLuint _vertexArrayID;
+		GLuint _uvBuffer;
 		GLuint _vertexBuffer;
 		GLfloat g_vertex_buffer_data[108];
 		
@@ -19,6 +21,9 @@ namespace GC_3D
 
 		GLuint _colorBuffer;
 		GLfloat g_color_buffer_data[108];
+
+		GLuint uvbuffer;
+		GLuint vertexbuffer;
 
 	public:
 		bool OnInit();
@@ -32,7 +37,11 @@ namespace GC_3D
 
 		void SetColor(GLfloat colorData[108]);
 
-		void SetBuffer();
+		void SetBuffer(
+			std::vector<unsigned short> indices,
+			std::vector<glm::vec3> vertices,
+			std::vector<glm::vec2> uvs,
+			std::vector<glm::vec3> normals);
 		void SetModelMatrix(mat4 model);
 	};
 }

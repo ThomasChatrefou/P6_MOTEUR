@@ -31,6 +31,8 @@ namespace GC_3D
         Triangle* _triangle;
         Cube* _cube;
 
+        aiMesh* scene;
+
         mat4 _mvp;
 
     public: // game execution functions
