@@ -1,13 +1,11 @@
-#include "includes.hpp"
-#include "MyApp.h"
+#include "OGLIncludes.hpp"
+#include "Application.hpp"
 
-
-using namespace GC_3D;
 
 
 int main(int argc, char* argv[])
 {
-	MyApp app(1024,728);
+	Application app(1024,728);
 
 	return app.OnExecute();
 }

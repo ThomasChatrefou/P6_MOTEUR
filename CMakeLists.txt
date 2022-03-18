@@ -28,17 +28,18 @@ else()
   set(IMGUI_SRCS ${IMGUI_SRCS} ${IMGUI_DIR}/backends/imgui_impl_opengl2.cpp)
 endif()
 
-add_executable(MyEngine main.cpp 
-	Includes.hpp
+add_executable(MyEngine			main.cpp 
+	OGLIncludes.hpp
 	shaders/LoadShader.hpp
-	Gui.h Gui.cpp
-	GetAppPath.h GetAppPath.cpp
-	Geometry.h Geometry.cpp
-	MyApp.h MyApp.cpp
-	Camera.h Camera.cpp
-	Triangle.h Triangle.cpp
-	Cube.h Cube.cpp
-	Mesh.h Mesh.cpp
+	Actor.hpp					Actor.cpp
+	Application.hpp				Application.cpp
+	Buffer.hpp					Buffer.cpp
+	Camera.hpp					Camera.cpp
+	GUI.hpp						GUI.cpp
+	Mesh.hpp					Mesh.cpp
+	Renderer.hpp				Renderer.cpp
+	Scene.hpp					Scene.cpp
+	Shader.hpp					Shader.cpp
 )
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}
