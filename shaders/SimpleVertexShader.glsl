@@ -1,16 +1,15 @@
 #version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
 
-layout(location = 0) in vec3 vertexPosition_modelspace;
+out vec2 TexCoord;
 
-layout(location = 1) in vec3 vertexColor;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
-uniform mat4 MVP;
-
-out vec3 fragmentColor;
-
-void main(){
-	gl_Position = MVP * vec4(vertexPosition_modelspace,1);
-
-	fragmentColor = vertexColor;
-
+void main()
+{
+    gl_Position = projection * view * model * vec4(aPos, 1.0f);
+    TexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y);
 }
