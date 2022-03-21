@@ -1,36 +1,38 @@
-#include "Includes.hpp"
-#include "LoadModel.h"
+#include "LoadModel.hpp"
+#include "OGLIncludes.hpp"
 
 namespace GC_3D
 {
-    bool Importer::DoTheImportThing(
-		const std::string& pFile, 
+	bool Importer::DoTheImportThing(
+		const std::string& pFile,
 		std::vector<unsigned short>& indices,
 		std::vector<glm::vec3>& vertices,
 		std::vector<glm::vec2>& uvs,
 		std::vector<glm::vec3>& normals)
-    {
+	{
 
-        // Create an instance of the Importer class
-        Assimp::Importer importer;
+		// Create an instance of the Importer class
+		Assimp::Importer importer;
 
-        // And have it read the given file with some example postprocessing
-        // Usually - if speed is not the most important aspect for you - you'll 
-        // propably to request more postprocessing than we do in this example.
-        const aiScene* scene = importer.ReadFile(pFile,
-            aiProcess_CalcTangentSpace |
-            aiProcess_Triangulate |
-            aiProcess_JoinIdenticalVertices |
-            aiProcess_SortByPType);
+		// And have it read the given file with some example postprocessing
+		// Usually - if speed is not the most important aspect for you - you'll 
+		// propably to request more postprocessing than we do in this example.
+		const aiScene* scene = importer.ReadFile(pFile,
+			aiProcess_CalcTangentSpace |
+			aiProcess_Triangulate |
+			aiProcess_JoinIdenticalVertices |
+			aiProcess_SortByPType);
 
-        // If the import failed, report it
-        if (!scene)
-        {
-            std::cout << "error : file can't open" << std::endl;
-            return false;
-        }
-        // We're done. Everything will be cleaned up by the importer destructor
-        std::cout << "file open" << std::endl;
+		// If the import failed, report it
+		if (!scene)
+		{
+			//std::cout << "file couldn't open" << std::endl;
+			std::cout << "error : file can't open" << std::endl;
+			return false;
+		}
+		// We're done. Everything will be cleaned up by the importer destructor
+		//std::cout << "file could open" << std::endl;
+		std::cout << "file open" << std::endl;
 
 
 		const aiMesh* mesh = scene->mMeshes[0]; // In this simple example code we always use the 1rst mesh (in OBJ files there is often only one anyway)
@@ -65,9 +67,6 @@ namespace GC_3D
 			indices.push_back(mesh->mFaces[i].mIndices[1]);
 			indices.push_back(mesh->mFaces[i].mIndices[2]);
 		}
-        return true;
-    }
-
-
-
+		return true;
+	}
 }
