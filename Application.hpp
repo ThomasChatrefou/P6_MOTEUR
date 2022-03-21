@@ -1,8 +1,9 @@
 #pragma once
 
 #include "OGLIncludes.hpp"
+#include "Inputs.hpp"
 
-class Application
+class Application : public Inputs
 {
 public:
     Application(int windowWidth, int windowHeight);
@@ -16,6 +17,9 @@ private:
     SDL_Window* m_Window;
     SDL_GLContext m_Context;
 
+    class Time* m_Clock;
+    class GUI* m_GUI;
+
 public: // game execution functions
     bool OnInit();
     void OnEvent(SDL_Event* currentEvent);
@@ -23,7 +27,15 @@ public: // game execution functions
     void OnRender();
     void OnCleanup();
 
-public:
-    bool Application::InitSDL();
-    bool Application::InitWindow();
+public: // init functions
+    bool InitSDL();
+    bool InitWindow();
+    bool InitContext();
+    bool InitGlew();
+
+public: // event functions
+    void OnQuit();
+
+public: // render functions
+    void ResetWindow();
 };
