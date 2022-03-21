@@ -19,7 +19,7 @@ bool GUI::OnInit()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
-	if (!InitStyle()) return false;
+	// if (!InitStyle()) return false;
 
 	if (!ImGui_ImplSDL2_InitForOpenGL(m_Window, m_Context))
 	{

@@ -5,8 +5,6 @@
 class Actor
 {
 public:
-	Actor();
-	~Actor();
 
 	void PrepareCubeToRenderer();
 	void LoadMatrix(glm::vec3 Position, bool rotateShape, float angle, float i, Shader shader, glm::vec3 scale);

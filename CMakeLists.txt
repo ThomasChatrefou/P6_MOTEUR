@@ -31,6 +31,7 @@ endif()
 add_executable(MyEngine			main.cpp 
 	OGLIncludes.hpp
 	shaders/LoadShader.hpp
+	stb_image.h
 	Actor.hpp					Actor.cpp
 	Application.hpp				Application.cpp
 	Buffer.hpp					Buffer.cpp

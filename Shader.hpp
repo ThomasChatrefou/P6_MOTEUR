@@ -3,19 +3,20 @@
 
 class Shader
 {
+private:
+    unsigned int m_ID;
+
 public:
-	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
-	~Shader();
-    unsigned int getID();
-    void setID(unsigned int id);
     bool InitShaders();
+	void LoadShader(const char*, const char*, const char*);
     void LoadAndCreateTexture(const char* m_texture1, const char* m_texture2);
     void BindTextures(unsigned int texture1, unsigned int texture2);
-
-
+	void UseShader();
+    void CheckCompileErrors(GLuint shader, std::string type);
 
 public:
-	void UseShader();
+    unsigned int getID() { return m_ID; }
+    void setID(unsigned int id) { m_ID = id; }
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;
     void setFloat(const std::string& name, float value) const;
@@ -28,10 +29,5 @@ public:
     void setMat2(const std::string& name, const glm::mat2& mat) const;
     void setMat3(const std::string& name, const glm::mat3& mat) const;
     void setMat4(const std::string& name, const glm::mat4& mat) const;
-private:
-    unsigned int m_ID;
-    // utility function for checking shader compilation/linking errors.
-    // ------------------------------------------------------------------------
-    void checkCompileErrors(GLuint shader, std::string type);
 
 };

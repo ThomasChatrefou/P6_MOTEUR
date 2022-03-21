@@ -1,28 +1,15 @@
 #pragma once
-#include "Shader.hpp"
-#include "stb_image.h"
 #include <filesystem>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 #include "GetAppPath.hpp"
+#include "Shader.hpp"
 
 
-#ifndef ShadersPath
-const char* SHADERS_REPOSITORY_NAME = "shaders";
-const char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
-const char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
-
-const char* const TEXTURE_REPOSITORY_NAME = "Sprite";
-const char* const TEXTURE_ONE_FILE_NAME = "awesomeface.png";
-const char* const TEXTURE_SECOND_FILE_NAME = "container.jpg";
-#endif //ShaderPath
-
-//GETTER ------------------- SETTER
-unsigned int Shader::getID(){return m_ID;}
-void Shader::setID(unsigned int id){m_ID = id;}
-;
-
-
-/*bool Shader::InitShaders()
+bool Shader::InitShaders()
 {
+/*
     std::filesystem::path appPath(GetAppPath());
     auto appDir = appPath.parent_path();
     auto shaderPath = appDir / SHADERS_REPOSITORY_NAME;
@@ -34,12 +21,12 @@ void Shader::setID(unsigned int id){m_ID = id;}
 
     _matrixID = glGetUniformLocation(_programID, "MVP");
 
+*/
     return true;
-}*/
+}
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
+void Shader::LoadShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
 {
-
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
@@ -88,12 +75,12 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
-    checkCompileErrors(vertex, "VERTEX");
+    //checkCompileErrors(vertex, "VERTEX");
     // fragment Shader
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
-    checkCompileErrors(fragment, "FRAGMENT");
+    //checkCompileErrors(fragment, "FRAGMENT");
     // if geometry shader is given, compile geometry shader
     unsigned int geometry;
     if (geometryPath != nullptr)
@@ -102,7 +89,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
         geometry = glCreateShader(GL_GEOMETRY_SHADER);
         glShaderSource(geometry, 1, &gShaderCode, NULL);
         glCompileShader(geometry);
-        checkCompileErrors(geometry, "GEOMETRY");
+        //checkCompileErrors(geometry, "GEOMETRY");
     }
     // shader Program
     m_ID = glCreateProgram();
@@ -111,7 +98,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
     if (geometryPath != nullptr)
         glAttachShader(m_ID, geometry);
     glLinkProgram(m_ID);
-    checkCompileErrors(m_ID, "PROGRAM");
+    CheckCompileErrors(m_ID, "PROGRAM");
     // delete the shaders as they're linked into our program now and no longer necessery
     glDeleteShader(vertex);
     glDeleteShader(fragment);
@@ -122,7 +109,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 
 void Shader::LoadAndCreateTexture(const char* m_texture1, const char* m_texture2)
 {
-
     unsigned int texture1, texture2;
     // texture 1
     // ---------
@@ -183,8 +169,9 @@ void Shader::LoadAndCreateTexture(const char* m_texture1, const char* m_texture2
 }
 //----------------------------------------------
 
-/*void Shader::BindTextures(unsigned int texture1, unsigned int texture2)
+void Shader::BindTextures(unsigned int texture1, unsigned int texture2)
 {
+/*
     UseShader();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
@@ -192,7 +179,8 @@ void Shader::LoadAndCreateTexture(const char* m_texture1, const char* m_texture2
     glBindTexture(GL_TEXTURE_2D, texture2);
     glUniform1i(glGetUniformLocation(m_ID, "texture1"), 0);
     setInt("texture2", 1);
-}*/
+*/
+}
 
 
 
@@ -261,7 +249,7 @@ void Shader::setMat4(const std::string& name, const glm::mat4& mat) const
     glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
-void checkCompileErrors(GLuint shader, std::string type)
+void Shader::CheckCompileErrors(GLuint shader, std::string type)
 {
     GLint success;
     GLchar infoLog[1024];
