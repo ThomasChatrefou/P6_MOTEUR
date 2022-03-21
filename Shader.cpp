@@ -20,7 +20,24 @@ unsigned int Shader::getID(){return m_ID;}
 void Shader::setID(unsigned int id){m_ID = id;}
 ;
 
-/*Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
+
+/*bool Shader::InitShaders()
+{
+    std::filesystem::path appPath(GetAppPath());
+    auto appDir = appPath.parent_path();
+    auto shaderPath = appDir / SHADERS_REPOSITORY_NAME;
+    auto vertexShaderPath = shaderPath / VERTEX_SHADERS_FILE_NAME;
+    auto fragmentShaderPath = shaderPath / FRAGMENT_SHADERS_FILE_NAME;
+
+    _programID = LoadShaders(vertexShaderPath.string().c_str(), fragmentShaderPath.string().c_str());
+    if (_programID == 0) return false;
+
+    _matrixID = glGetUniformLocation(_programID, "MVP");
+
+    return true;
+}*/
+
+Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
 {
 
     // 1. retrieve the vertex/fragment source code from filePath
@@ -100,7 +117,7 @@ void Shader::setID(unsigned int id){m_ID = id;}
     glDeleteShader(fragment);
     if (geometryPath != nullptr)
         glDeleteShader(geometry);
-}*/
+}
 
 
 void Shader::LoadAndCreateTexture(const char* m_texture1, const char* m_texture2)
