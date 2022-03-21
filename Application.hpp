@@ -3,6 +3,12 @@
 #include "OGLIncludes.hpp"
 #include "Inputs.hpp"
 
+#ifndef ShadersPath
+char* SHADERS_REPOSITORY_NAME = "shaders";
+char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
+char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
+#endif //ShaderPath
+
 class Application : public Inputs
 {
 public:

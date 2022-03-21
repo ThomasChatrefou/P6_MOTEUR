@@ -1,13 +1,10 @@
 #include "Application.hpp"
 #include "GUI.hpp"
 #include "Time.hpp"
+#include "Buffer.hpp"
+#include "Mesh.hpp"
 
 
-#ifndef ShadersPath
-char* SHADERS_REPOSITORY_NAME = "shaders";
-char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
-char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
-#endif //ShaderPath
 
 
 Application::Application(int windowWidth, int windowHeight)
@@ -20,6 +17,7 @@ Application::Application(int windowWidth, int windowHeight)
 
     m_Clock = new Time();
     m_GUI = nullptr;
+    
 }
 
 int Application::OnExecute()
@@ -63,6 +61,15 @@ bool Application::OnInit()
     if (!m_GUI->OnInit()) return false;
     
     std::cout << "==== END INIT ====" << std::endl;
+
+
+    Buffer OBuffer;
+    OBuffer.Vao();
+    OBuffer.CreateBuffer(1, CubeVertices, sizeof(CubeVertices));
+    OBuffer.BindBufferToAttrib(0, 3, 5 * sizeof(float), 0);
+    OBuffer.BindBufferToAttrib(1, 2, 5 * sizeof(float), (3 * sizeof(float)));
+
+
 	return true;
 }
 

@@ -21,5 +21,4 @@ void Actor::LoadMatrix(glm::vec3 Position, bool rotateShape, float angle, float 
         float Rangle = angle * i;
         model = glm::rotate(model, glm::radians(Rangle), glm::vec3(1.0f, 0.3f, 0.5f));
     }
-
 }
