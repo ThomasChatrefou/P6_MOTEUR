@@ -5,8 +5,8 @@
 class Buffer
 {
 public:
-	Buffer();
-	~Buffer();
+	Buffer() {}
+	~Buffer() {}
 
 public:
 	unsigned int VAO, VBO;
