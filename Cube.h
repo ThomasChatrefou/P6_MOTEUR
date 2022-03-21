@@ -15,15 +15,11 @@ namespace GC_3D
 		GLuint _vertexArrayID;
 		GLuint _uvBuffer;
 		GLuint _vertexBuffer;
-		GLfloat g_vertex_buffer_data[108];
 		
-		mat4 _model;
 
 		GLuint _colorBuffer;
-		GLfloat g_color_buffer_data[108];
 
-		GLuint uvbuffer;
-		GLuint vertexbuffer;
+		mat4 _model;
 
 	public:
 		bool OnInit();
@@ -32,10 +28,6 @@ namespace GC_3D
 
 	public:
 		mat4 GetModelMatrix() { return _model; }
-
-		void SetVertex(GLfloat vertexData[108]);
-
-		void SetColor(GLfloat colorData[108]);
 
 		void SetBuffer(
 			std::vector<unsigned short> indices,

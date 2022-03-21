@@ -16,8 +16,6 @@ namespace GC_3D
 		_elementBuffer = 0;
 		_uvBuffer = 0;
 		_colorBuffer = 0;
-		for (int i = 0; i < 108; i++) g_vertex_buffer_data[i] = 0;
-		for (int i = 0; i < 108; i++) g_color_buffer_data[i] = 0;
 		_model = mat4(1.0f);
 	}
 
@@ -30,7 +28,6 @@ namespace GC_3D
 	{
 		glGenVertexArrays(1, &_vertexArrayID);
 		glBindVertexArray(_vertexArrayID);
-
 
 		return true;
 	}
@@ -52,12 +49,13 @@ namespace GC_3D
 		std::vector<glm::vec3> normals;
 
 		Importer::DoTheImportThing(modelPath.string().c_str(), indices, vertices, uvs, normals);
+
 		SetBuffer(indices, vertices, uvs, normals);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 
-		glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer); // bind to the next VertexAttribPointer
 		glVertexAttribPointer(
 			0,                  // must match the layout in the shader.
 			3,                  // size
@@ -67,7 +65,7 @@ namespace GC_3D
 			(void*)0            // array buffer offset
 		);
 
-		glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer); // bind to the next VertexAttribPointer
 		glVertexAttribPointer(
 			1,                  // must match the layout in the shader.
 			2,                  // size
@@ -77,16 +75,14 @@ namespace GC_3D
 			(void*)0            // array buffer offset
 		);
 
-		//glDrawArrays(GL_TRIANGLES, 0, 36); // Starting from vertex 0; 3 vertices total
-
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementBuffer);
+
 		glDrawElements(
 			GL_TRIANGLES,
 			indices.size(),
 			GL_UNSIGNED_SHORT,
 			(void*)0
 		);
-
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 	}
@@ -100,10 +96,6 @@ namespace GC_3D
 		glGenBuffers(1, &_vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
-
-		/*glGenBuffers(1, &_colorBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, _colorBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);*/
 		
 		glGenBuffers(1, &_elementBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementBuffer);

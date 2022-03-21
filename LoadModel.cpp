@@ -26,11 +26,11 @@ namespace GC_3D
         // If the import failed, report it
         if (!scene)
         {
-            //std::cout << "file couldn't open" << std::endl;
+            std::cout << "error : file can't open" << std::endl;
             return false;
         }
         // We're done. Everything will be cleaned up by the importer destructor
-        //std::cout << "file could open" << std::endl;
+        std::cout << "file open" << std::endl;
 
 
 		const aiMesh* mesh = scene->mMeshes[0]; // In this simple example code we always use the 1rst mesh (in OBJ files there is often only one anyway)
