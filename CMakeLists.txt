@@ -48,7 +48,7 @@ add_executable(MyEngine			main.cpp
 	Shader.hpp					Shader.cpp
 	Time.hpp					Time.cpp
 	Cthulhu.hpp					Cthulhu.cpp
-	LoadModel.hpp				LoadModel.cpp
+	Importer.hpp				Importer.cpp
 )
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}

@@ -20,6 +20,9 @@ private:
     class Time* m_Clock;
     class GUI* m_GUI;
 
+    //erase
+    class Cthulhu* cthulhu;
+
 public: // game execution functions
     bool OnInit();
     void OnEvent(SDL_Event* currentEvent);

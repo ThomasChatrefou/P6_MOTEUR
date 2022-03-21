@@ -1,6 +1,7 @@
 #include "Application.hpp"
 #include "GUI.hpp"
 #include "Time.hpp"
+#include "Cthulhu.hpp"
 
 
 #ifndef ShadersPath
@@ -61,6 +62,9 @@ bool Application::OnInit()
 
     m_GUI = new GUI(m_Window, m_Context);
     if (!m_GUI->OnInit()) return false;
+
+    //erase
+    cthulhu->OnInit();
     
     std::cout << "==== END INIT ====" << std::endl;
 	return true;
@@ -85,7 +89,7 @@ void Application::OnRender()
     m_GUI->OnRender();
 
     //  RENDERING STUFF
-   
+    cthulhu->OnRender();
 
     //  END RENDERING
 
