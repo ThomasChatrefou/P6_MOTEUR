@@ -54,8 +54,11 @@ target_link_libraries(MyEngine PRIVATE SDL2main SDL2-static opengl32 glew imgui)
 
 add_custom_target(copy_shaders COMMAND ${CMAKE_COMMAND}
 -E copy_directory ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:MyEngine>/shaders)
+add_custom_target(copy_sprite COMMAND ${CMAKE_COMMAND}
+-E copy_directory ${CMAKE_SOURCE_DIR}/Sprite $<TARGET_FILE_DIR:MyEngine>/Sprite)
 
 add_dependencies(MyEngine copy_shaders)
+add_dependencies(MyEngine copy_sprite)
 
 add_library(imgui STATIC ${IMGUI_SRCS})
 target_include_directories(imgui PRIVATE 

@@ -6,21 +6,11 @@
 class Renderer
 {
 public:
-	Renderer();
-	~Renderer();
 	Shader CubeRendering();
 	void FinalCubeRendering();
 private:
 
 };
-
-Renderer::Renderer()
-{
-}
-
-Renderer::~Renderer()
-{
-}
 
 static const glm::vec3 cubePositions[] = {
         glm::vec3(0.0f,  0.0f, 0.0f),

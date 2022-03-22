@@ -14,6 +14,7 @@ void Actor::PrepareCubeToRenderer()
 
 void Actor::LoadMatrix(glm::vec3 Position, bool rotateShape, float angle, float i, Shader shader, glm::vec3 scale)
 {
+   
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, Position) * glm::scale(model,scale);
     if (rotateShape)
@@ -21,5 +22,6 @@ void Actor::LoadMatrix(glm::vec3 Position, bool rotateShape, float angle, float 
         float Rangle = angle * i;
         model = glm::rotate(model, glm::radians(Rangle), glm::vec3(1.0f, 0.3f, 0.5f));
     }
+   shader.setMat4("model", model);
 
 }

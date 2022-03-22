@@ -35,11 +35,12 @@ Shader Renderer::CubeRendering()
 
 void Renderer::FinalCubeRendering()
 {
-	Actor actor;
-	actor.PrepareCubeToRenderer();
+	
 	Shader temp = CubeRendering();
+	
 	for (unsigned int i = 0; i < 10; i++)
 	{
+		Actor actor;
 		actor.LoadMatrix(cubePositions[i], false, 0.0f, i, temp , glm::vec3(1.0f, 1.0f, 1.0f));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
