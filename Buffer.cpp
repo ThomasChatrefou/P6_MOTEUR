@@ -14,12 +14,12 @@ void Buffer::BindBufferToAttrib(int attribut, int size, int stride, int arrayOff
     glEnableVertexAttribArray(attribut);
     glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
     glVertexAttribPointer(
-        attribut,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+        attribut,              // attribute 0. No particular reason for 0, but must match the layout in the shader.
         size,                  // size
-        GL_FLOAT,           // type
-        GL_FALSE,           // normalized?
-        stride,                  // stride
-        (void*)arrayOffset            // array buffer offset
+        GL_FLOAT,              // type
+        GL_FALSE,              // normalized?
+        stride,                // stride
+        (void*)arrayOffset     // array buffer offset
     );
 }
 

@@ -12,6 +12,9 @@ set(SDL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/SDL/include)
 set(GLM_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/glm)
 set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/imgui)
 set(IMGUI_INCLUDE_DIR ${IMGUI_DIR} ${IMGUI_DIR}/backends)
+set(IMGUI_INCLUDE_DIR ${IMGUI_DIR} ${IMGUI_DIR}/backends)
+set(ASSIMP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/dep/assimp)
+
 set(IMGUI_SRCS
 	${IMGUI_DIR}/imgui.cpp
 	${IMGUI_DIR}/imgui_draw.cpp
@@ -44,13 +47,16 @@ add_executable(MyEngine			main.cpp
 	Scene.hpp					Scene.cpp
 	Shader.hpp					Shader.cpp
 	Time.hpp					Time.cpp
+	Cthulhu.hpp					Cthulhu.cpp
+	Importer.hpp				Importer.cpp
 )
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}
 	${GLM_INCLUDE_DIR}
 	${IMGUI_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}
 )
-target_link_libraries(MyEngine PRIVATE SDL2main SDL2-static opengl32 glew imgui)
+target_link_libraries(MyEngine PRIVATE SDL2main SDL2-static opengl32 glew imgui assimp)
 
 add_custom_target(copy_shaders COMMAND ${CMAKE_COMMAND}
 -E copy_directory ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:MyEngine>/shaders)

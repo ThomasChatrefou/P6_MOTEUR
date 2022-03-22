@@ -11,7 +11,6 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
-
 #include <chrono>
 #include <vector>
 
@@ -22,10 +21,16 @@
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <assimp/cimport.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 
 namespace GC_3D
 {
   using namespace glm;
+  using namespace std;
 
   template <typename T>
   using Vector = std::vector<T>;

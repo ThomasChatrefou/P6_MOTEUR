@@ -7,7 +7,6 @@ namespace GC_3D
     class Camera;
     class Triangle;
     class Cube;
-    class Gui;
 
     class MyApp
     {
@@ -26,18 +25,15 @@ namespace GC_3D
         GLuint _matrixID;
 
         Clock _clock;
-        Timestamp _start;
+        Clock::time_point _start;
 
         Camera* _camera;
         Triangle* _triangle;
         Cube* _cube;
 
-        mat4 _mvpTriangle;
-        mat4 _mvpCube;
+        aiMesh* scene;
 
-        Gui* _gui;
-
-        float _speed;
+        mat4 _mvp;
 
     public: // game execution functions
         bool OnInit();
@@ -45,13 +41,18 @@ namespace GC_3D
         void OnLoop();
         void OnRender();
         void OnCleanup();
-
-    public: // tuto functions
-        bool InitScene();
         bool InitShaders();
-        void LoopScene();
-        void RenderScene();
         void ResetWindow();
+
+    public: // tuto Triangle functions
+        bool InitTriangleScene();
+        void LoopTriangleScene();
+        void RenderTriangleScene();
+    
+    public: // tuto Cube functions
+        bool InitCubeScene();
+        void LoopCubeScene();
+        void RenderCubeScene();
 
     public: // old openGL functions
         void DrawRotatingCube();

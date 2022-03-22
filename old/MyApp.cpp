@@ -1,15 +1,15 @@
 #include "MyApp.h"
 #include "Geometry.h"
 #include "Camera.h"
-#include "Triangle.h"
 #include "Cube.h"
-#include "shaders/LoadShader.hpp"
+#include "Triangle.h"
+#include "LoadShader.hpp"
 #include "GetAppPath.h"
-#include "Gui.h"
+
 
 
 #ifndef ShadersPath
-char* SHADERS_REPOSITORY_NAME = "shaders";
+char* SHADERS_REPOSITORY_NAME = "resources/shaders";
 char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
 char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
 #endif //ShaderPath
@@ -30,11 +30,7 @@ namespace GC_3D
         _camera = nullptr;
         _triangle = nullptr;
         _cube = nullptr;
-        _mvpTriangle = mat4(1.0f);
-        _mvpCube = mat4(1.0f);
-
-        _gui = nullptr;
-        _speed = 0.5f;
+        _mvp = mat4(1.0f);
     }
 
     int MyApp::OnExecute() 
@@ -85,10 +81,9 @@ namespace GC_3D
             _height,
             windowsFlags);
 
-        // Permet d'utiliser renderProfile
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_PROFILE_CORE);
 
         if (_window == NULL) 
         {
@@ -117,7 +112,7 @@ namespace GC_3D
             return false;
         }
 
-        if (!InitScene())
+        if (!InitCubeScene())
         {
             std::cout << "Scene init failed" << std::endl;
             return false;
@@ -129,12 +124,7 @@ namespace GC_3D
             return false;
         }
 
-        _gui = new Gui(_window, _context);
-        if (!_gui->OnInit())
-        {
-            std::cout << "GUI init failed" << std::endl;
-            return false;
-        }
+        
 
         _start = _clock.now();
         return true;
@@ -142,7 +132,6 @@ namespace GC_3D
 
     void MyApp::OnEvent(SDL_Event* currentEvent)
     {
-        _gui->OnEvent(currentEvent);
         if (currentEvent->type == SDL_QUIT)
         {
             _appRunning = false;
@@ -151,164 +140,23 @@ namespace GC_3D
 
     void MyApp::OnLoop()
     {
-        _gui->OnLoop();
-        _gui->SpeedSlider(_speed);
-        bool isActive = true;
-        float color[4] {0.0f,0.0f,0.0f,1.0f};
-        _gui->Tool(isActive, color);
-        LoopScene();
+        //LoopTriangleScene();
+        LoopCubeScene();
     }
 
     void MyApp::OnRender()
     {
         ResetWindow();
 
-        _gui->OnRender();
-
-        RenderScene();
+        //RenderTriangleScene();
+        RenderCubeScene();
 
         SDL_GL_SwapWindow(_window);
     }
 
     void MyApp::OnCleanup()
     {
-        _gui->OnCleanup();
         SDL_Quit();
-    }
-
-
-    /*****************
-    * tuto functions *
-    *****************/
-
-    bool MyApp::InitScene()
-    {
-        _camera = new Camera();
-        _camera->OnInit(
-            vec3(4.0f, 3.0f, 3.0f), 
-            vec3(0.0f, 0.0f, 0.0f), 
-            45.0f, 
-            (float)_width / (float)_height, 
-            0.1f, 
-            100.0f);
-
-        
-        _triangle = new Triangle();
-        if (!_triangle->OnInit()) return false;
-
-        GLfloat trianglePositionData[] = {
-            -2.0f, -2.0f, 2.0f,
-            1.0f, -2.0f, 2.0f,
-            0.0f,  2.0f, 1.0f,
-        };
-        GLfloat triangleColorData[9];
-
-        srand((unsigned)time(NULL));
-        for (int i = 0; i < 9; ++i) triangleColorData[i] = (float)rand() / RAND_MAX;
-
-        _triangle->SetVertex(trianglePositionData);
-        _triangle->SetColor(triangleColorData);
-        _triangle->SetBuffer();
-        _triangle->SetModelMatrix(mat4(1.0f));
-        
-        mat4 proj = _camera->GetProjectionMatrix();
-        mat4 view = _camera->GetLookAtMatrix();
-        mat4 model = _triangle->GetModelMatrix();
-        _mvpTriangle = proj * view * model;
-
-
-        _cube = new Cube();
-        if (!_cube->OnInit()) return false;
-
-        GLfloat cubePositionData[] = {
-            -1.0f,-1.0f,-1.0f,
-            -1.0f,-1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f, 
-            1.0f, 1.0f,-1.0f, 
-            -1.0f,-1.0f,-1.0f,
-            -1.0f, 1.0f,-1.0f, 
-            1.0f,-1.0f, 1.0f,
-            -1.0f,-1.0f,-1.0f,
-            1.0f,-1.0f,-1.0f,
-            1.0f, 1.0f,-1.0f,
-            1.0f,-1.0f,-1.0f,
-            -1.0f,-1.0f,-1.0f,
-            -1.0f,-1.0f,-1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f,-1.0f,
-            1.0f,-1.0f, 1.0f,
-            -1.0f,-1.0f, 1.0f,
-            -1.0f,-1.0f,-1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f,-1.0f, 1.0f,
-            1.0f,-1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f,-1.0f,-1.0f,
-            1.0f, 1.0f,-1.0f,
-            1.0f,-1.0f,-1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f,-1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f,-1.0f,
-            -1.0f, 1.0f,-1.0f,
-            1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f,-1.0f,
-            -1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            1.0f,-1.0f, 1.0f
-        };
-        GLfloat cubeColorData[] = {
-            0.583f,  0.771f,  0.014f,
-            0.609f,  0.115f,  0.436f,
-            0.327f,  0.483f,  0.844f,
-            0.822f,  0.569f,  0.201f,
-            0.435f,  0.602f,  0.223f,
-            0.310f,  0.747f,  0.185f,
-            0.597f,  0.770f,  0.761f,
-            0.559f,  0.436f,  0.730f,
-            0.359f,  0.583f,  0.152f,
-            0.483f,  0.596f,  0.789f,
-            0.559f,  0.861f,  0.639f,
-            0.195f,  0.548f,  0.859f,
-            0.014f,  0.184f,  0.576f,
-            0.771f,  0.328f,  0.970f,
-            0.406f,  0.615f,  0.116f,
-            0.676f,  0.977f,  0.133f,
-            0.971f,  0.572f,  0.833f,
-            0.140f,  0.616f,  0.489f,
-            0.997f,  0.513f,  0.064f,
-            0.945f,  0.719f,  0.592f,
-            0.543f,  0.021f,  0.978f,
-            0.279f,  0.317f,  0.505f,
-            0.167f,  0.620f,  0.077f,
-            0.347f,  0.857f,  0.137f,
-            0.055f,  0.953f,  0.042f,
-            0.714f,  0.505f,  0.345f,
-            0.783f,  0.290f,  0.734f,
-            0.722f,  0.645f,  0.174f,
-            0.302f,  0.455f,  0.848f,
-            0.225f,  0.587f,  0.040f,
-            0.517f,  0.713f,  0.338f,
-            0.053f,  0.959f,  0.120f,
-            0.393f,  0.621f,  0.362f,
-            0.673f,  0.211f,  0.457f,
-            0.820f,  0.883f,  0.371f,
-            0.982f,  0.099f,  0.879f
-        };
-
-        _cube->SetVertex(cubePositionData);
-        _cube->SetColor(cubeColorData);
-        _cube->SetBuffer();
-        _cube->SetModelMatrix(mat4(1.0f));
-
-        model = _cube->GetModelMatrix();
-        _mvpCube = proj * view * model;
-
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-
-        return true;
     }
 
     bool MyApp::InitShaders()
@@ -327,39 +175,100 @@ namespace GC_3D
         return true;
     }
 
-    void MyApp::LoopScene()
-    {
-        _triangle->OnLoop();
-        _cube->OnLoop();
-        glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &_mvpTriangle[0][0]);
-
-    }
-
-    void MyApp::RenderScene()
-    {
-        glUseProgram(_programID);
-        _triangle->OnRender();
-        _cube->OnRender();
-        
-        Timestamp now = _clock.now();
-        Duration timeStep = now - _start;
-        vec3 viewPos = vec3(5.0 * sin(Seconds(timeStep) * _speed), 3.0, 5.0 * cos(Seconds(timeStep) * _speed));
-        _camera->SetPosition(viewPos);
-
-        mat4 proj = _camera->GetProjectionMatrix();
-        mat4 view = _camera->GetLookAtMatrix();
-        mat4 model = _cube->GetModelMatrix();
-        _mvpTriangle = proj * view * model;
-
-        model = _cube->GetModelMatrix();
-        _mvpCube = proj * view * model;
-    }
-
     void MyApp::ResetWindow() 
     {
         glViewport(0, 0, _width, _height);
         glClearColor(0.1f, 0.1f, 0.15f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    /**************************
+    * tuto Triangle functions *
+    **************************/
+
+    bool MyApp::InitTriangleScene()
+    {
+        _camera = new Camera();
+        _camera->OnInit(
+            vec3(4.0f, 3.0f, 3.0f), 
+            vec3(0.0f, 0.0f, 0.0f), 
+            45.0f, 
+            (float)_width / (float)_height, 
+            0.1f, 
+            100.0f);
+
+        _triangle = new Triangle();
+        if (!_triangle->OnInit()) return false;
+
+        GLfloat data[9] = {
+            -1.0f, -1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f,
+            0.0f,  1.0f, 0.0f,
+        };
+        _triangle->SetVertex(data);
+        _triangle->SetBuffer();
+        _triangle->SetModelMatrix(mat4(1.0f));
+
+        mat4 proj = _camera->GetProjectionMatrix();
+        mat4 view = _camera->GetLookAtMatrix();
+        mat4 model = _triangle->GetModelMatrix();
+        _mvp = proj * view * model;
+
+        return true;
+    }
+
+    void MyApp::LoopTriangleScene()
+    {
+        _triangle->OnLoop();
+        glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &_mvp[0][0]);
+
+    }
+    
+    void MyApp::RenderTriangleScene()
+    {
+        glUseProgram(_programID);
+        _triangle->OnRender();
+    }
+
+    /**************************
+    *    tuto Cube function   *
+    **************************/
+
+    bool MyApp::InitCubeScene()
+    {
+        _camera = new Camera();
+        _camera->OnInit(
+            vec3(4.0f, 3.0f, 3.0f),
+            vec3(0.0f, 0.0f, 0.0f),
+            45.0f,
+            (float)_width / (float)_height,
+            0.1f,
+            100.0f);
+
+        _cube = new Cube();
+        if (!_cube->OnInit()) return false;
+        
+        _cube->SetModelMatrix(mat4(1.0f));
+
+        mat4 proj = _camera->GetProjectionMatrix();
+        mat4 view = _camera->GetLookAtMatrix();
+        mat4 model = _cube->GetModelMatrix();
+        _mvp = proj * view * model;
+
+        return true;
+    }
+
+    void MyApp::LoopCubeScene()
+    {
+        _cube->OnLoop();
+        glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &_mvp[0][0]);
+
+    }
+
+    void MyApp::RenderCubeScene()
+    {
+        glUseProgram(_programID);
+        _cube->OnRender();
     }
 
 
