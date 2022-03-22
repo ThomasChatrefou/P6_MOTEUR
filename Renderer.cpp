@@ -11,9 +11,9 @@ const char* SHADERS_REPOSITORY_NAME = "shaders";
 const char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
 const char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
 
-Shader Renderer::CubeRendering()
+void Renderer::CubeRendering()
 {
-
+	/*
 	std::filesystem::path appPath(GetAppPath());
 	auto appDir = appPath.parent_path();
 	auto textureDirectory = appDir / TEXTURE_REPOSITORY_NAME;
@@ -29,22 +29,6 @@ Shader Renderer::CubeRendering()
 	Shader shader; 
 	shader.LoadShader(vertexShaderPath.string().c_str(), fragmentShaderPath.string().c_str(), nullptr);
 	shader.LoadAndCreateTexture(texture1Path.string().c_str(), texture2Path.string().c_str());
-
-	return shader;
+	*/
 }
 
-void Renderer::FinalCubeRendering()
-{
-	
-	Shader temp = CubeRendering();
-	
-	for (unsigned int i = 0; i < 10; i++)
-	{
-		Actor actor;
-		actor.LoadMatrix(cubePositions[i], false, 0.0f, i, temp , glm::vec3(1.0f, 1.0f, 1.0f));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
-	
-	
-
-}

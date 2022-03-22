@@ -1,7 +1,7 @@
 #pragma once
 #include "Buffer.hpp"
 
-void Buffer::CreateBuffer(int size, const GLfloat* iData, size_t iSize)
+void Buffer::CreateBuffer(const GLfloat* iData, size_t iSize)
 {
 	glGenBuffers(1, &m_Buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);

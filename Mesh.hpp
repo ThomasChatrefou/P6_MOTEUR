@@ -6,8 +6,6 @@ class Mesh
 public:
 	Mesh();
 	~Mesh();
-    void InitCube();
-
 private:
 
 };

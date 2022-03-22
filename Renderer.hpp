@@ -6,8 +6,12 @@
 class Renderer
 {
 public:
-	Shader CubeRendering();
-	void FinalCubeRendering();
+	void CubeRendering();
+public:
+    void BindMaterials();
+    void BindMesh();
+    void Draw();
+
 private:
 
 };

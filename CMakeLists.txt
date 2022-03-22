@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.23)
 
 project(MyEngine)
 include(cmake/glew.cmake)
+
+set(ASSIMP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/dep/assimp)
 include(cmake/assimp.cmake)
 add_subdirectory(dep/SDL dep/SDL)
 
@@ -13,7 +15,6 @@ set(GLM_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/glm)
 set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/imgui)
 set(IMGUI_INCLUDE_DIR ${IMGUI_DIR} ${IMGUI_DIR}/backends)
 set(IMGUI_INCLUDE_DIR ${IMGUI_DIR} ${IMGUI_DIR}/backends)
-set(ASSIMP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/dep/assimp)
 
 set(IMGUI_SRCS
 	${IMGUI_DIR}/imgui.cpp
