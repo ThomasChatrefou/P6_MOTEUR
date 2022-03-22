@@ -1,6 +1,7 @@
 #include "Application.hpp"
 #include "GUI.hpp"
 #include "Time.hpp"
+#include "Camera.hpp"
 #include "Cthulhu.hpp"
 
 
@@ -63,9 +64,25 @@ bool Application::OnInit()
     m_GUI = new GUI(m_Window, m_Context);
     if (!m_GUI->OnInit()) return false;
 
-    //erase
+    //temp -> put this into scene
+    glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -3.0f);
+    glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
+    float fov = 45.0f;
+
+    cam = new Camera();
+    cam->OnInit(camPos, target, fov, (float)m_Width / (float)m_Height, 0.1f, 100.0f);
+
+    cthulhu = new Cthulhu();
     cthulhu->OnInit();
     
+
+    glm::mat4 proj = cam->GetProjectionMatrix();
+    glm::mat4 view = cam->GetLookAtMatrix();
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 _mvp = proj * view * model;
+
+    //end temp
+
     std::cout << "==== END INIT ====" << std::endl;
 	return true;
 }

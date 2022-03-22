@@ -21,6 +21,7 @@ private:
     class GUI* m_GUI;
 
     //erase
+    class Camera* cam;
     class Cthulhu* cthulhu;
 
 public: // game execution functions

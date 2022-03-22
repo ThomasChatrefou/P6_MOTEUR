@@ -10,28 +10,21 @@ public:
 	~Cthulhu();
 
 private:
-	GLuint _elementBuffer;
-	GLuint _vertexArrayID;
-	GLuint _uvBuffer;
-	GLuint _vertexBuffer;
 
+	std::vector<unsigned short> m_Indices;
+	std::vector<glm::vec3> m_Vertices;
+	std::vector<glm::vec2> m_UV;
+	std::vector<glm::vec3> m_Normals;
 
-	GLuint _colorBuffer;
-
-	glm::mat4 _model;
+	GLuint m_VertexArrayID;
+	GLuint m_VertexBuffer;
+	GLuint m_UVBuffer;
+	GLuint m_ElementBuffer;
 
 public:
 	bool OnInit();
-	void OnLoop();
 	void OnRender();
 
 public:
-	glm::mat4 GetModelMatrix() { return _model; }
-
-	void SetBuffer(
-		std::vector<unsigned short> indices,
-		std::vector<glm::vec3> vertices,
-		std::vector<glm::vec2> uvs,
-		std::vector<glm::vec3> normals);
-	void SetModelMatrix(glm::mat4 model);
+	void PrepareForRenderingWithVAO();
 };
