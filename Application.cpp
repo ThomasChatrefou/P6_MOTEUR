@@ -5,11 +5,9 @@
 #include "Cthulhu.hpp"
 
 
-#ifndef ShadersPath
-char* SHADERS_REPOSITORY_NAME = "shaders";
-char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
-char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
-#endif //ShaderPath
+#ifndef ModelFilePaths
+const char* CTHULHU_MODEL_PATH = "../../source/resources/FBX/Cthulhu.fbx";
+#endif //FilePaths
 
 
 Application::Application(int windowWidth, int windowHeight)
@@ -73,7 +71,7 @@ bool Application::OnInit()
     cam->OnInit(camPos, target, fov, (float)m_Width / (float)m_Height, 0.1f, 100.0f);
 
     cthulhu = new Cthulhu();
-    cthulhu->OnInit();
+    cthulhu->OnInit(CTHULHU_MODEL_PATH);
     
 
     glm::mat4 proj = cam->GetProjectionMatrix();

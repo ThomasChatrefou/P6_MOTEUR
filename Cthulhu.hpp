@@ -22,7 +22,7 @@ private:
 	GLuint m_ElementBuffer;
 
 public:
-	bool OnInit();
+	bool OnInit(const char* filePath);
 	void OnRender();
 
 public:

@@ -16,11 +16,11 @@ Cthulhu::~Cthulhu()
 
 }
 
-bool Cthulhu::OnInit()
+bool Cthulhu::OnInit(const char* filePath)
 {
 	std::filesystem::path appPath(GetAppPath());
 	auto const appDir = appPath.parent_path();
-	auto const modelPath = appDir / "../../source/resources/FBX/Cthulhu.fbx";
+	auto const modelPath = appDir / filePath;
 	Importer::DoTheImportThing(modelPath.string().c_str(), m_Indices, m_Vertices, m_UV, m_Normals);
 
 	PrepareForRenderingWithVAO();
