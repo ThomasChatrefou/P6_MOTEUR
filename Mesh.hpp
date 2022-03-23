@@ -1,15 +1,25 @@
 #pragma once
 #include "OGLIncludes.hpp"
 
+class Buffer;
+
 class Mesh
 {
 public:
 	Mesh();
 	~Mesh();
-    void InitCube();
+
+    bool LoadMesh(const std::string& pFile);
 
 private:
+    unsigned int VAO, VBO, EBO;
 
+    std::vector<glm::vec3> m_Vertices;
+    std::vector<glm::vec2> m_UV;
+    std::vector<glm::vec3> m_Normals;
+    std::vector<unsigned short> m_Indices;
+
+    std::shared_ptr<Buffer> m_Buffer;
 };
 
 struct PrimitiveCube

@@ -11,10 +11,10 @@ public:
 
 private:
 
-	std::vector<unsigned short> m_Indices;
 	std::vector<glm::vec3> m_Vertices;
 	std::vector<glm::vec2> m_UV;
 	std::vector<glm::vec3> m_Normals;
+	std::vector<unsigned short> m_Indices;
 
 	GLuint m_VertexArrayID;
 	GLuint m_VertexBuffer;

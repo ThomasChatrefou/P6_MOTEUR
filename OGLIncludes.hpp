@@ -11,7 +11,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
-
+#include <memory>
 #include <vector>
 
 #include <GL/glew.h>
