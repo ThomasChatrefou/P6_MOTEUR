@@ -20,11 +20,9 @@ private:
 
     class Time* m_Clock;
     class GUI* m_GUI;
+    class Renderer* m_Renderer;
 
     //temp
-    class Camera* cam;
-    class Cthulhu* cthulhu;
-
     glm::vec3 translationA;
     glm::vec3 translationB;
     class VertexArray* va;
@@ -33,13 +31,19 @@ private:
     class Shader* shader;
     class MyTexture* texture;
 
-    class Renderer* m_Renderer;
+    class Camera* cam;
+    class Cthulhu* cthulhu;
+
+    class MyTest* currentTest;
+    class TestMenu* testMenu;
+    class MyTestClearColor* test;
 
 public: // game execution functions
     bool OnInit();
     void OnEvent(SDL_Event* currentEvent);
     void OnLoop();
     void OnRender();
+    void OnGuiRender();
     void OnCleanup();
 
 public: // init functions
@@ -48,6 +52,7 @@ public: // init functions
     bool InitContext();
     bool InitGlew();
     void EnableVSync();
+    void EnableBending();
 
 public: // event functions
     void OnQuit();

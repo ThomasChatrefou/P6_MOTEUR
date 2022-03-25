@@ -1,8 +1,7 @@
 #include "Application.hpp"
 #include "GUI.hpp"
 #include "Time.hpp"
-#include "Camera.hpp"
-#include "Cthulhu.hpp"
+#include "Renderer.hpp"
 
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
@@ -10,7 +9,14 @@
 #include "VertexBufferLayout.hpp"
 #include "Shader.hpp"
 #include "MyTexture.hpp"
-#include "Renderer.hpp"
+
+#include "Camera.hpp"
+#include "Cthulhu.hpp"
+
+#include "MyTest.hpp"
+#include "MyTestClearColor.hpp"
+#include "imgui.h"
+
 
 const std::string SHADER_FILE = "resources/shaders/Basic.shader";
 const std::string TEXTURE_FILE = "resources/textures/zote.jpg";
@@ -25,13 +31,19 @@ Application::Application(const std::string& sourcePath, int windowWidth, int win
     m_Clock(nullptr), m_GUI(nullptr), m_Renderer(nullptr)
 {
     //temp
-    cam = nullptr;
-    cthulhu = nullptr;
+    translationA = glm::vec3(0.0f);
+    translationB = glm::vec3(0.0f);
     va = nullptr;
     vb = nullptr;
     ib = nullptr;
     shader = nullptr;
     texture = nullptr;
+    cam = nullptr;
+    cthulhu = nullptr;
+    
+    currentTest = nullptr;
+    testMenu = new TestMenu(currentTest);
+    currentTest = testMenu;
 }
 
 int Application::OnExecute()
@@ -51,8 +63,8 @@ int Application::OnExecute()
         }
 
         OnLoop();
-
         OnRender();
+        OnGuiRender();
     }
 
     OnCleanup();
@@ -73,8 +85,15 @@ bool Application::OnInit()
     m_GUI = new GUI(m_Window, m_Context);
     if (!m_GUI->OnInit()) return false;
 
-    EnableVSync();
+    EnableVSync(); 
+    EnableBending();
 
+    m_Renderer = new Renderer();
+
+    testMenu->RegisterTest<MyTestClearColor>("Clear Color");
+
+    // squares
+    /*
     float positions[] = {
         -100.0f, -100.0f, 0.0f, 0.0f,
          100.0f, -100.0f, 1.0f, 0.0f,
@@ -90,8 +109,6 @@ bool Application::OnInit()
     translationA = glm::vec3(200.0f, 200.0f, 0.0f);
     translationB = glm::vec3(400.0f, 200.0f, 0.0f);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     va = new VertexArray();
 
@@ -116,9 +133,9 @@ bool Application::OnInit()
     vb->Unbind();
     ib->Unbind();
     shader->Unbind();
+    */
 
-    m_Renderer = new Renderer();
-
+    // cthulhu
     /*
     { 
         //temp -> put this into scene
@@ -162,9 +179,11 @@ void Application::OnLoop()
 void Application::OnRender()
 {
     m_Renderer->Clear();
-    m_GUI->NewFrame();
 
     //  RENDERING STUFF
+
+    // squares
+    /*
     m_GUI->BeginWindow("Debug", 320.0f, 10.0f, 600.0f, 100.0f);
 
     glm::mat4 proj = glm::ortho(0.0f, (float)m_Width, 0.0f, (float)m_Height, -1.0f, 1.0f);
@@ -176,7 +195,6 @@ void Application::OnRender()
         shader->Bind();
         shader->SetUniformMat4f("u_MVP", mvp);
         m_Renderer->Draw(*va, *ib, *shader);
-        m_GUI->AddSliderFloat3("TranslationA", translationA, 0.0f, 1000.0f);
     }
 
     {
@@ -185,19 +203,56 @@ void Application::OnRender()
         shader->Bind();
         shader->SetUniformMat4f("u_MVP", mvp);
         m_Renderer->Draw(*va, *ib, *shader);
-        m_GUI->AddSliderFloat3("TranslationB", translationB, 0.0f, 1000.0f);
     }
 
-    m_GUI->EndWindow();
+    */
+
     //  END RENDERING
 
+}
+
+void Application::OnGuiRender()
+{
+    m_GUI->NewFrame();
+
+    // GUI RENDERING
+
+    if (currentTest) 
+    {
+        currentTest->OnLoop(m_Clock->getDeltaTime());
+        currentTest->OnRender();
+        ImGui::Begin("Test");
+        if (currentTest != testMenu && ImGui::Button("<-"))
+        {
+            delete currentTest;
+            currentTest = testMenu;
+        }
+        currentTest->OnGuiRender();
+        ImGui::End();
+    }
+
+
+    /*
+    m_GUI->BeginWindow("Debug", 320.0f, 10.0f, 600.0f, 100.0f);
+    m_GUI->AddSliderFloat3("TranslationB", translationB, 0.0f, 1000.0f);
+    m_GUI->AddSliderFloat3("TranslationA", translationA, 0.0f, 1000.0f);
+    m_GUI->EndWindow();
     m_GUI->PrintFPS(m_Clock->getDeltaTime());
+    */
+
     m_GUI->OnRender();
+
+    // END GUI RENDERING
+
     SDL_GL_SwapWindow(m_Window);
 }
 
 void Application::OnCleanup()
 {
+    if (currentTest != testMenu)
+        delete testMenu;
+    delete currentTest;
+
     m_GUI->OnCleanup();
     SDL_Quit();
 }
@@ -273,6 +328,12 @@ bool Application::InitGlew()
 void Application::EnableVSync()
 {
     SDL_GL_SetSwapInterval(1);
+}
+
+void Application::EnableBending()
+{
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 //////////////////////////////////////////////////////

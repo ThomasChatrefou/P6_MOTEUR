@@ -43,6 +43,8 @@ add_executable(MyEngine			Main.cpp
 	IndexBuffer.hpp				IndexBuffer.cpp
 	Inputs.hpp					Inputs.cpp
 	Mesh.hpp					Mesh.cpp
+	MyTest.hpp					MyTest.cpp
+	MyTestClearColor.hpp		MyTestClearColor.cpp
 	MyTexture.hpp				MyTexture.cpp
 	Renderer.hpp				Renderer.cpp
 	Scene.hpp					Scene.cpp
@@ -50,7 +52,6 @@ add_executable(MyEngine			Main.cpp
 	Time.hpp					Time.cpp
 	VertexArray.hpp				VertexArray.cpp
 	VertexBuffer.hpp			VertexBuffer.cpp
-	MyTest.hpp
 	OGLIncludes.hpp
 	LoadShader.hpp
 	stb_image.h

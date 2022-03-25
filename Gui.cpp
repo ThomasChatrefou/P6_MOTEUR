@@ -7,7 +7,7 @@
 
 
 #ifndef FontsPath
-const char* FONTS_REPOSITORY_NAME = "../../source/dep/imgui/misc/fonts";
+const char* FONTS_REPOSITORY_NAME = "../source/dep/imgui/misc/fonts";
 const char* FONT_FILE_NAME = "Karla-Regular.ttf";
 #endif //FontsPath
 
