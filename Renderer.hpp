@@ -1,8 +1,22 @@
 #pragma once
+class VertexArray;
+class IndexBuffer;
+class Shader;
+
+class Renderer 
+{
+private:
+
+public:
+    void Clear() const;
+    void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+};
+
+
+/*
 #include "OGLIncludes.hpp"
 #include "Shader.hpp"
 #include "Actor.hpp"
-
 class Renderer
 {
 public:
@@ -35,3 +49,4 @@ static const glm::vec3 cubePositions[] = {
         glm::vec3(18.0f, 0.0f, 0.0f),
         glm::vec3(20.0f, 0.0f, 0.0f)
 };
+*/

@@ -6,11 +6,12 @@
 class Application : public Inputs
 {
 public:
-    Application(int windowWidth, int windowHeight);
+    Application(const std::string& sourcePath, int windowWidth, int windowHeight);
 
     int OnExecute();
 
 private:
+    std::string m_SourcePath;
     bool m_AppRunning;
     int m_Width;
     int m_Height;
@@ -20,9 +21,19 @@ private:
     class Time* m_Clock;
     class GUI* m_GUI;
 
-    //erase
+    //temp
     class Camera* cam;
     class Cthulhu* cthulhu;
+
+    glm::vec3 translationA;
+    glm::vec3 translationB;
+    class VertexArray* va;
+    class VertexBuffer* vb;
+    class IndexBuffer* ib;
+    class Shader* shader;
+    class MyTexture* texture;
+
+    class Renderer* m_Renderer;
 
 public: // game execution functions
     bool OnInit();
@@ -36,10 +47,9 @@ public: // init functions
     bool InitWindow();
     bool InitContext();
     bool InitGlew();
+    void EnableVSync();
 
 public: // event functions
     void OnQuit();
 
-public: // render functions
-    void ResetWindow();
 };

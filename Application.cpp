@@ -4,22 +4,34 @@
 #include "Camera.hpp"
 #include "Cthulhu.hpp"
 
+#include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
+#include "VertexArray.hpp"
+#include "VertexBufferLayout.hpp"
+#include "Shader.hpp"
+#include "MyTexture.hpp"
+#include "Renderer.hpp"
 
-#ifndef ModelFilePaths
-const char* CTHULHU_MODEL_PATH = "../../source/resources/FBX/Cthulhu.fbx";
-#endif //FilePaths
+const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+const std::string TEXTURE_FILE = "resources/textures/zote.jpg";
+const std::string CTHULHU_MODEL_FILE = "resources/models/Cthulhu.fbx";
 
 
-Application::Application(int windowWidth, int windowHeight)
+
+Application::Application(const std::string& sourcePath, int windowWidth, int windowHeight) :
+    m_SourcePath(sourcePath), m_AppRunning(true),
+    m_Width(windowWidth), m_Height(windowHeight),
+    m_Window(NULL), m_Context(NULL),
+    m_Clock(nullptr), m_GUI(nullptr), m_Renderer(nullptr)
 {
-    m_AppRunning = true;
-    m_Width = windowWidth;
-    m_Height = windowHeight;
-    m_Window = NULL;
-    m_Context = NULL;
-
-    m_Clock = new Time();
-    m_GUI = nullptr;
+    //temp
+    cam = nullptr;
+    cthulhu = nullptr;
+    va = nullptr;
+    vb = nullptr;
+    ib = nullptr;
+    shader = nullptr;
+    texture = nullptr;
 }
 
 int Application::OnExecute()
@@ -58,28 +70,79 @@ bool Application::OnInit()
     if (!InitWindow()) return false;
     if (!InitContext()) return false;
     if (!InitGlew()) return false;
-
     m_GUI = new GUI(m_Window, m_Context);
     if (!m_GUI->OnInit()) return false;
 
-    //temp -> put this into scene
-    glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -3.0f);
-    glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
-    float fov = 45.0f;
+    EnableVSync();
 
-    cam = new Camera();
-    cam->OnInit(camPos, target, fov, (float)m_Width / (float)m_Height, 0.1f, 100.0f);
+    float positions[] = {
+        -100.0f, -100.0f, 0.0f, 0.0f,
+         100.0f, -100.0f, 1.0f, 0.0f,
+         100.0f,  100.0f, 1.0f, 1.0f,
+        -100.0f,  100.0f, 0.0f, 1.0f,
+    };
 
-    cthulhu = new Cthulhu();
-    cthulhu->OnInit(CTHULHU_MODEL_PATH);
+    unsigned int indices[] = {
+        0,1,2,
+        2,3,0
+    };
+
+    translationA = glm::vec3(200.0f, 200.0f, 0.0f);
+    translationB = glm::vec3(400.0f, 200.0f, 0.0f);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    va = new VertexArray();
+
+    vb = new VertexBuffer(positions, 4 * 4 * sizeof(float));
+    VertexBufferLayout layout;
+    layout.Push(2);
+    layout.Push(2);
+
+    va->AddBuffer(*vb, layout);
+
+    ib = new IndexBuffer(indices, 6);
+
+    auto shaderPath = m_SourcePath + SHADER_FILE;
+    shader = new Shader(shaderPath);
+
+    auto texturePath = m_SourcePath + TEXTURE_FILE;
+    texture = new MyTexture(texturePath);
+    texture->Bind();
+    shader->SetUniform1i("u_Texture", 0);
+
+    va->Unbind();
+    vb->Unbind();
+    ib->Unbind();
+    shader->Unbind();
+
+    m_Renderer = new Renderer();
+
+    /*
+    { 
+        //temp -> put this into scene
+        glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -3.0f);
+        glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
+        float fov = 45.0f;
+
+        cam = new Camera();
+        cam->OnInit(camPos, target, fov, (float)m_Width / (float)m_Height, 0.1f, 100.0f);
+
+        cthulhu = new Cthulhu();
+        cthulhu->OnInit(CTHULHU_MODEL_PATH);
     
 
-    glm::mat4 proj = cam->GetProjectionMatrix();
-    glm::mat4 view = cam->GetLookAtMatrix();
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 _mvp = proj * view * model;
+        glm::mat4 proj = cam->GetProjectionMatrix();
+        glm::mat4 view = cam->GetLookAtMatrix();
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 _mvp = proj * view * model;
 
-    //end temp
+    }
+    */
+
+
+    m_Clock = new Time();
 
     std::cout << "==== END INIT ====" << std::endl;
 	return true;
@@ -94,20 +157,42 @@ void Application::OnEvent(SDL_Event* currentEvent)
 void Application::OnLoop()
 {
     m_Clock->OnLoop();
-    m_GUI->OnLoop();
-    m_GUI->PrintFPS(m_Clock->getDeltaTime());
 }
 
 void Application::OnRender()
 {
-    ResetWindow();
-    m_GUI->OnRender();
+    m_Renderer->Clear();
+    m_GUI->NewFrame();
 
     //  RENDERING STUFF
-    cthulhu->OnRender();
+    m_GUI->BeginWindow("Debug", 320.0f, 10.0f, 600.0f, 100.0f);
 
+    glm::mat4 proj = glm::ortho(0.0f, (float)m_Width, 0.0f, (float)m_Height, -1.0f, 1.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+    {
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
+        glm::mat4 mvp = proj * view * model;
+        shader->Bind();
+        shader->SetUniformMat4f("u_MVP", mvp);
+        m_Renderer->Draw(*va, *ib, *shader);
+        m_GUI->AddSliderFloat3("TranslationA", translationA, 0.0f, 1000.0f);
+    }
+
+    {
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
+        glm::mat4 mvp = proj * view * model;
+        shader->Bind();
+        shader->SetUniformMat4f("u_MVP", mvp);
+        m_Renderer->Draw(*va, *ib, *shader);
+        m_GUI->AddSliderFloat3("TranslationB", translationB, 0.0f, 1000.0f);
+    }
+
+    m_GUI->EndWindow();
     //  END RENDERING
 
+    m_GUI->PrintFPS(m_Clock->getDeltaTime());
+    m_GUI->OnRender();
     SDL_GL_SwapWindow(m_Window);
 }
 
@@ -158,16 +243,21 @@ bool Application::InitContext()
 
     m_Context = SDL_GL_CreateContext(m_Window);
 
-    if (m_Context != NULL)
+    if (m_Context == NULL)
     {
-        if (SDL_GL_MakeCurrent(m_Window, m_Context) >= 0) return true;
-
+        std::cout << "ERROR: SDL context creation failed" << std::endl;
+        return false;
+    }
+    if (SDL_GL_MakeCurrent(m_Window, m_Context) < 0)
+    {
         std::cout << "ERROR: OpenGL context setup failed" << std::endl;
         return false;
     }
 
-    std::cout << "ERROR: SDL context creation failed" << std::endl;
-    return false;
+    glViewport(0, 0, m_Width, m_Height);
+    glClearColor(0.13f, 0.13f, 0.13f, 0.0f);
+
+    return true;
 }
 
 bool Application::InitGlew()
@@ -180,18 +270,14 @@ bool Application::InitGlew()
     return false;
 }
 
+void Application::EnableVSync()
+{
+    SDL_GL_SetSwapInterval(1);
+}
+
 //////////////////////////////////////////////////////
 
 void Application::OnQuit()
 {
     m_AppRunning = false;
-}
-
-//////////////////////////////////////////////////////
-
-void Application::ResetWindow()
-{
-    glViewport(0, 0, m_Width, m_Height);
-    glClearColor(0.13f, 0.13f, 0.13f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

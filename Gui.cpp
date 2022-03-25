@@ -33,6 +33,8 @@ bool GUI::OnInit()
 		std::cout << "ERROR: ImGui_ImplOpenGL3 init failed" << std::endl;
 	}
 
+	ImGui::StyleColorsDark();
+
 	return true;
 }
 
@@ -41,7 +43,7 @@ void GUI::OnEvent(SDL_Event* currentEvent)
 	ImGui_ImplSDL2_ProcessEvent(currentEvent);
 }
 
-void GUI::OnLoop()
+void GUI::NewFrame()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_Window);
@@ -91,6 +93,28 @@ void GUI::PrintFPS(float deltaTime)
 	ImGui::End();
 }
 
+void GUI::BeginWindow(const std::string& name, float posX, float posY, float sizeX, float sizeY)
+{
+	ImGui::Begin(name.c_str());
+	ImGui::SetWindowPos(ImVec2(posX, posY), ImGuiCond_Once);
+	ImGui::SetWindowSize(ImVec2(sizeX, sizeY), ImGuiCond_Once);
+}
+
+void GUI::EndWindow() 
+{
+	ImGui::End();
+}
+
+void GUI::AddSliderFloat(const std::string& name, float& value, float min, float max)
+{
+	ImGui::SliderFloat(name.c_str(), &value, min, max);
+}
+
+void GUI::AddSliderFloat3(const std::string& name, glm::vec3& vector, float min, float max)
+{
+	ImGui::SliderFloat3(name.c_str(), &vector.x, min, max);
+}
+
 void GUI::SpeedSlider(float& speed)
 {
 	ImGui::Begin("SpeedWindow");
@@ -98,6 +122,15 @@ void GUI::SpeedSlider(float& speed)
 	ImGui::SliderFloat("Speed", &speed, 0.0f, 10.0f);
 	ImGui::End();
 }
+
+void GUI::Debug(glm::vec3& vector)
+{
+	ImGui::Begin("Debug");
+	ImGui::SetWindowPos(ImVec2(320, 10), ImGuiCond_Once);
+	ImGui::SetWindowSize(ImVec2(600, 100), ImGuiCond_Once);
+	ImGui::End();
+}
+
 
 void GUI::Tool(bool isActive, float color[4])
 {// Create a window called "My First Tool", with a menu bar.

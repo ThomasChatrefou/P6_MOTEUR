@@ -1,7 +1,31 @@
 #pragma once
-#include "Buffer.hpp"
+#include "IndexBuffer.hpp"
 
 
+
+IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) : m_Count(count)
+{
+	glGenBuffers(1, &m_RendererID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
+}
+
+IndexBuffer::~IndexBuffer()
+{
+	glDeleteBuffers(1, &m_RendererID);
+}
+
+void IndexBuffer::Bind() const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+}
+
+void IndexBuffer::Unbind() const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+/*
 void Buffer::CreateBuffer(int size, const GLfloat* iData, size_t iSize)
 {
 	glGenBuffers(1, &m_Buffer);
@@ -22,4 +46,4 @@ void Buffer::Vao()
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 }
-
+*/

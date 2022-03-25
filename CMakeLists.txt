@@ -31,24 +31,29 @@ else()
   set(IMGUI_SRCS ${IMGUI_SRCS} ${IMGUI_DIR}/backends/imgui_impl_opengl2.cpp)
 endif()
 
-add_executable(MyEngine			main.cpp 
-	OGLIncludes.hpp
-	shaders/LoadShader.hpp
-	stb_image.h
+add_executable(MyEngine			Main.cpp 
 	Actor.hpp					Actor.cpp
 	Application.hpp				Application.cpp
 	Buffer.hpp					Buffer.cpp
 	Camera.hpp					Camera.cpp
-	GUI.hpp						GUI.cpp
+	Cthulhu.hpp					Cthulhu.cpp
 	GetAppPath.hpp				GetAppPath.cpp
+	GUI.hpp						GUI.cpp
+	Importer.hpp				Importer.cpp
+	IndexBuffer.hpp				IndexBuffer.cpp
 	Inputs.hpp					Inputs.cpp
 	Mesh.hpp					Mesh.cpp
+	MyTexture.hpp				MyTexture.cpp
 	Renderer.hpp				Renderer.cpp
 	Scene.hpp					Scene.cpp
 	Shader.hpp					Shader.cpp
 	Time.hpp					Time.cpp
-	Cthulhu.hpp					Cthulhu.cpp
-	Importer.hpp				Importer.cpp
+	VertexArray.hpp				VertexArray.cpp
+	VertexBuffer.hpp			VertexBuffer.cpp
+	MyTest.hpp
+	OGLIncludes.hpp
+	LoadShader.hpp
+	stb_image.h
 )
 target_include_directories(MyEngine PRIVATE 
 	${SDL_INCLUDE_DIR}
@@ -59,7 +64,7 @@ target_include_directories(MyEngine PRIVATE
 target_link_libraries(MyEngine PRIVATE SDL2main SDL2-static opengl32 glew imgui assimp)
 
 add_custom_target(copy_shaders COMMAND ${CMAKE_COMMAND}
--E copy_directory ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:MyEngine>/shaders)
+-E copy_directory ${CMAKE_SOURCE_DIR}/resources/shaders $<TARGET_FILE_DIR:MyEngine>/shaders)
 
 add_dependencies(MyEngine copy_shaders)
 
