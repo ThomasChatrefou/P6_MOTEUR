@@ -1,7 +1,12 @@
 #pragma once
+#include<memory>
 
 #include "OGLIncludes.hpp"
 #include "Inputs.hpp"
+
+class Time;
+class GUI;
+class Renderer;
 
 class Application : public Inputs
 {
@@ -18,9 +23,9 @@ private:
     SDL_Window* m_Window;
     SDL_GLContext m_Context;
 
-    class Time* m_Clock;
-    class GUI* m_GUI;
-    class Renderer* m_Renderer;
+    std::shared_ptr<Time> m_Clock;
+    std::shared_ptr<GUI> m_GUI;
+    std::shared_ptr<Renderer> m_Renderer;
 
     //temp
     glm::vec3 translationA;
@@ -36,7 +41,6 @@ private:
 
     class MyTest* currentTest;
     class TestMenu* testMenu;
-    class MyTestClearColor* test;
 
 public: // game execution functions
     bool OnInit();

@@ -19,7 +19,7 @@ bool GUI::OnInit()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
-	// if (!InitStyle()) return false;
+	if (!InitStyle()) return false;
 
 	if (!ImGui_ImplSDL2_InitForOpenGL(m_Window, m_Context))
 	{
@@ -32,8 +32,6 @@ bool GUI::OnInit()
 		return false;
 		std::cout << "ERROR: ImGui_ImplOpenGL3 init failed" << std::endl;
 	}
-
-	ImGui::StyleColorsDark();
 
 	return true;
 }
@@ -76,7 +74,7 @@ bool GUI::InitStyle()
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-	pFont = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 18.0f);
+	pFont = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 16.0f);
 
 	if (pFont != NULL) return true;
 	std::cout << "ERROR: font file not found" << std::endl;
@@ -86,10 +84,10 @@ bool GUI::InitStyle()
 void GUI::PrintFPS(float deltaTime)
 {
 	ImGui::Begin("Perfs");
-	ImGui::SetWindowPos(ImVec2(10, 10), ImGuiCond_Once);
-	ImGui::SetWindowSize(ImVec2(300, 100), ImGuiCond_Once);
-	ImGui::Text("Frame Duration (ms) : %5.2f", deltaTime * 1e3);
-	ImGui::Text("FPS : %5.0f", 1.0 / deltaTime);
+	ImGui::SetWindowPos(ImVec2(260, 0), ImGuiCond_Once);
+	ImGui::SetWindowSize(ImVec2(250, 100), ImGuiCond_Once);
+	ImGui::Text("Frame Duration (ms) : %.2f", deltaTime * 1e3);
+	ImGui::Text("FPS : %.1f", 1.0 / deltaTime);
 	ImGui::End();
 }
 
@@ -105,14 +103,24 @@ void GUI::EndWindow()
 	ImGui::End();
 }
 
-void GUI::AddSliderFloat(const std::string& name, float& value, float min, float max)
+bool GUI::AddButton(const std::string& name)
 {
-	ImGui::SliderFloat(name.c_str(), &value, min, max);
+	return ImGui::Button(name.c_str());
 }
 
-void GUI::AddSliderFloat3(const std::string& name, glm::vec3& vector, float min, float max)
+bool GUI::AddSliderFloat(const std::string& name, float& value, float min, float max)
 {
-	ImGui::SliderFloat3(name.c_str(), &vector.x, min, max);
+	return ImGui::SliderFloat(name.c_str(), &value, min, max);
+}
+
+bool GUI::AddSliderFloat3(const std::string& name, glm::vec3& vector, float min, float max)
+{
+	return ImGui::SliderFloat3(name.c_str(), &vector.x, min, max);
+}
+
+bool GUI::AddColorEdit4(const std::string& name, float* colorArray)
+{
+	return ImGui::ColorEdit4(name.c_str(), colorArray);
 }
 
 void GUI::SpeedSlider(float& speed)

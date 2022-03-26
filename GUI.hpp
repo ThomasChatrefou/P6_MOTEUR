@@ -27,8 +27,10 @@ public:
 	void BeginWindow(const std::string& name, float posX, float posY, float sizeX, float sizeY);
 	void EndWindow();
 
-	void AddSliderFloat(const std::string& name, float& value, float min, float max);
-	void AddSliderFloat3(const std::string& name, glm::vec3& vector, float min, float max);
+	bool AddButton(const std::string& name);
+	bool AddSliderFloat(const std::string& name, float& value, float min, float max);
+	bool AddSliderFloat3(const std::string& name, glm::vec3& vector, float min, float max);
+	bool AddColorEdit4(const std::string& name, float* colorArray);
 
 public:
 	void SpeedSlider(float& speed);

@@ -2,17 +2,17 @@
 
 #include "MyTest.hpp"
 
-class MyTestClearColor : public MyTest
+class MyTestTemplate : public MyTest
 {
 public:
-	MyTestClearColor(const TestHandlingData& testData);
-	~MyTestClearColor();
+	MyTestTemplate();
+	~MyTestTemplate();
 
 	void OnLoop(float deltaTime) override;
 	void OnRender() override;
 	void OnGuiRender() override;
 
 private:
-	float m_ClearColor[4];
+
 
 };

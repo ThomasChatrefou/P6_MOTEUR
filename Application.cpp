@@ -15,12 +15,23 @@
 
 #include "MyTest.hpp"
 #include "MyTestClearColor.hpp"
+#include "MyTestTexture2D.hpp"
 #include "imgui.h"
 
-
+#ifndef ShaderFile
+#define ShaderFile
 const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+#endif // !ShaderFile
+
+#ifndef TextureFile
+#define TextureFile
 const std::string TEXTURE_FILE = "resources/textures/zote.jpg";
+#endif // !TextureFile
+
+#ifndef CthulhuModelFile
+#define CthulhuModelFile
 const std::string CTHULHU_MODEL_FILE = "resources/models/Cthulhu.fbx";
+#endif // !CthulhuModelFile
 
 
 
@@ -82,58 +93,20 @@ bool Application::OnInit()
     if (!InitWindow()) return false;
     if (!InitContext()) return false;
     if (!InitGlew()) return false;
-    m_GUI = new GUI(m_Window, m_Context);
+    m_GUI = std::make_shared<GUI>(m_Window, m_Context);
     if (!m_GUI->OnInit()) return false;
 
     EnableVSync(); 
     EnableBending();
 
-    m_Renderer = new Renderer();
-
-    testMenu->RegisterTest<MyTestClearColor>("Clear Color");
-
-    // squares
-    /*
-    float positions[] = {
-        -100.0f, -100.0f, 0.0f, 0.0f,
-         100.0f, -100.0f, 1.0f, 0.0f,
-         100.0f,  100.0f, 1.0f, 1.0f,
-        -100.0f,  100.0f, 0.0f, 1.0f,
-    };
-
-    unsigned int indices[] = {
-        0,1,2,
-        2,3,0
-    };
-
-    translationA = glm::vec3(200.0f, 200.0f, 0.0f);
-    translationB = glm::vec3(400.0f, 200.0f, 0.0f);
-
-
-    va = new VertexArray();
-
-    vb = new VertexBuffer(positions, 4 * 4 * sizeof(float));
-    VertexBufferLayout layout;
-    layout.Push(2);
-    layout.Push(2);
-
-    va->AddBuffer(*vb, layout);
-
-    ib = new IndexBuffer(indices, 6);
-
-    auto shaderPath = m_SourcePath + SHADER_FILE;
-    shader = new Shader(shaderPath);
-
-    auto texturePath = m_SourcePath + TEXTURE_FILE;
-    texture = new MyTexture(texturePath);
-    texture->Bind();
-    shader->SetUniform1i("u_Texture", 0);
-
-    va->Unbind();
-    vb->Unbind();
-    ib->Unbind();
-    shader->Unbind();
-    */
+    m_Renderer = std::make_shared<Renderer>();
+    m_Clock = std::make_shared<Time>();
+    
+    TestHandlingData testData{ m_SourcePath, m_Width, m_Height, m_Clock, m_GUI, m_Renderer };
+    
+    testMenu->RegisterTest<MyTestClearColor>("Clear Color", testData);
+    testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", testData);
+    
 
     // cthulhu
     /*
@@ -159,7 +132,6 @@ bool Application::OnInit()
     */
 
 
-    m_Clock = new Time();
 
     std::cout << "==== END INIT ====" << std::endl;
 	return true;
@@ -182,33 +154,8 @@ void Application::OnRender()
 
     //  RENDERING STUFF
 
-    // squares
-    /*
-    m_GUI->BeginWindow("Debug", 320.0f, 10.0f, 600.0f, 100.0f);
-
-    glm::mat4 proj = glm::ortho(0.0f, (float)m_Width, 0.0f, (float)m_Height, -1.0f, 1.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
-    {
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
-        glm::mat4 mvp = proj * view * model;
-        shader->Bind();
-        shader->SetUniformMat4f("u_MVP", mvp);
-        m_Renderer->Draw(*va, *ib, *shader);
-    }
-
-    {
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
-        glm::mat4 mvp = proj * view * model;
-        shader->Bind();
-        shader->SetUniformMat4f("u_MVP", mvp);
-        m_Renderer->Draw(*va, *ib, *shader);
-    }
-
-    */
 
     //  END RENDERING
-
 }
 
 void Application::OnGuiRender()
@@ -221,24 +168,15 @@ void Application::OnGuiRender()
     {
         currentTest->OnLoop(m_Clock->getDeltaTime());
         currentTest->OnRender();
-        ImGui::Begin("Test");
-        if (currentTest != testMenu && ImGui::Button("<-"))
+        m_GUI->BeginWindow("Tests", 0.0f, 0.0f, 250.0f, 100.0f);
+        if (currentTest != testMenu && m_GUI->AddButton("<- Back"))
         {
             delete currentTest;
             currentTest = testMenu;
         }
         currentTest->OnGuiRender();
-        ImGui::End();
+        m_GUI->EndWindow();
     }
-
-
-    /*
-    m_GUI->BeginWindow("Debug", 320.0f, 10.0f, 600.0f, 100.0f);
-    m_GUI->AddSliderFloat3("TranslationB", translationB, 0.0f, 1000.0f);
-    m_GUI->AddSliderFloat3("TranslationA", translationA, 0.0f, 1000.0f);
-    m_GUI->EndWindow();
-    m_GUI->PrintFPS(m_Clock->getDeltaTime());
-    */
 
     m_GUI->OnRender();
 

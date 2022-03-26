@@ -1,13 +1,15 @@
 #include "MyTestClearColor.hpp"
 
 #include "OGLIncludes.hpp"
+#include "GUI.hpp"
 #include "Renderer.hpp"
 #include "imgui.h"
 
 
-MyTestClearColor::MyTestClearColor()
+MyTestClearColor::MyTestClearColor(const TestHandlingData& testData)
 	: m_ClearColor{0.2f, 0.3f, 0.8f, 1.0f}
 {
+	data = testData;
 }
 
 MyTestClearColor::~MyTestClearColor() 
@@ -26,5 +28,7 @@ void MyTestClearColor::OnRender()
 
 void MyTestClearColor::OnGuiRender()
 {
-	ImGui::ColorEdit4("Clear Color", m_ClearColor);
+	data.pGUI->BeginWindow("Debug", 260.0f, 0.0f, 300.0f, 100.0f);
+	data.pGUI->AddColorEdit4("Clear Color", m_ClearColor);
+	data.pGUI->EndWindow();
 }
