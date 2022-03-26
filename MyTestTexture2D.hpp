@@ -16,10 +16,9 @@ class MyTexture;
 class MyTestTexture2D : public MyTest
 {
 public:
-	MyTestTexture2D(const TestHandlingData& testData);
+	MyTestTexture2D(const AppSystemData& appData);
 	~MyTestTexture2D();
 
-	void OnLoop(float deltaTime) override;
 	void OnRender() override;
 	void OnGuiRender() override;
 

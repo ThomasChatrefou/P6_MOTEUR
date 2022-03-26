@@ -4,14 +4,19 @@
 #include "OGLIncludes.hpp"
 #include "Inputs.hpp"
 
+
 class Time;
-class GUI;
 class Renderer;
+class GUI;
+class MyTest;
+class TestMenu;
+
 
 class Application : public Inputs
 {
 public:
     Application(const std::string& sourcePath, int windowWidth, int windowHeight);
+    ~Application() {}
 
     int OnExecute();
 
@@ -24,23 +29,15 @@ private:
     SDL_GLContext m_Context;
 
     std::shared_ptr<Time> m_Clock;
-    std::shared_ptr<GUI> m_GUI;
     std::shared_ptr<Renderer> m_Renderer;
-
-    //temp
-    glm::vec3 translationA;
-    glm::vec3 translationB;
-    class VertexArray* va;
-    class VertexBuffer* vb;
-    class IndexBuffer* ib;
-    class Shader* shader;
-    class MyTexture* texture;
-
-    class Camera* cam;
-    class Cthulhu* cthulhu;
+    std::shared_ptr<GUI> m_GUI;
 
     class MyTest* currentTest;
     class TestMenu* testMenu;
+
+    //cthulhu
+    class Camera* cam;
+    class Cthulhu* cthulhu;
 
 public: // game execution functions
     bool OnInit();
@@ -60,5 +57,4 @@ public: // init functions
 
 public: // event functions
     void OnQuit();
-
 };

@@ -2,6 +2,7 @@
 
 #include "OGLIncludes.hpp"
 
+
 class GUI
 {
 public:
@@ -15,14 +16,14 @@ private:
 	SDL_GLContext m_Context;
 
 public:
-	bool OnInit();
+	bool OnInit(const std::string& sourcePath);
 	void OnEvent(SDL_Event* currentEvent);
 	void NewFrame();
 	void OnRender();
 	void OnCleanup();
 
 public:
-	bool InitStyle();
+	bool InitStyle(const std::string& sourcePath);
 	void PrintFPS(float deltaTime);
 	void BeginWindow(const std::string& name, float posX, float posY, float sizeX, float sizeY);
 	void EndWindow();

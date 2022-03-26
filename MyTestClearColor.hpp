@@ -2,10 +2,11 @@
 
 #include "MyTest.hpp"
 
+
 class MyTestClearColor : public MyTest
 {
 public:
-	MyTestClearColor(const TestHandlingData& testData);
+	MyTestClearColor(const AppSystemData& appData);
 	~MyTestClearColor();
 
 	void OnLoop(float deltaTime) override;
@@ -14,5 +15,4 @@ public:
 
 private:
 	float m_ClearColor[4];
-
 };

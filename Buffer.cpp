@@ -11,7 +11,6 @@ void Buffer::CreateBuffer(int size, const GLfloat* iData, size_t iSize)
 
 void Buffer::BindBufferToAttrib(int attribut, int size, int stride, int arrayOffset)
 {
-    // 1rst attribute buffer : vertices
     glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
     glEnableVertexAttribArray(attribut);
     glVertexAttribPointer(attribut, size, GL_FLOAT, GL_FALSE, stride, (void*)arrayOffset);

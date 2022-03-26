@@ -1,5 +1,7 @@
 #pragma once
+
 #include "OGLIncludes.hpp"
+
 
 class Scene
 {

@@ -1,22 +1,16 @@
 #include "Application.hpp"
-#include "GUI.hpp"
+
 #include "Time.hpp"
 #include "Renderer.hpp"
-
-#include "VertexBuffer.hpp"
-#include "IndexBuffer.hpp"
-#include "VertexArray.hpp"
-#include "VertexBufferLayout.hpp"
-#include "Shader.hpp"
-#include "MyTexture.hpp"
-
-#include "Camera.hpp"
-#include "Cthulhu.hpp"
+#include "GUI.hpp"
 
 #include "MyTest.hpp"
 #include "MyTestClearColor.hpp"
 #include "MyTestTexture2D.hpp"
-#include "imgui.h"
+
+#include "Camera.hpp"
+#include "Cthulhu.hpp"
+
 
 #ifndef ShaderFile
 #define ShaderFile
@@ -34,27 +28,19 @@ const std::string CTHULHU_MODEL_FILE = "resources/models/Cthulhu.fbx";
 #endif // !CthulhuModelFile
 
 
-
 Application::Application(const std::string& sourcePath, int windowWidth, int windowHeight) :
     m_SourcePath(sourcePath), m_AppRunning(true),
     m_Width(windowWidth), m_Height(windowHeight),
     m_Window(NULL), m_Context(NULL),
     m_Clock(nullptr), m_GUI(nullptr), m_Renderer(nullptr)
 {
-    //temp
-    translationA = glm::vec3(0.0f);
-    translationB = glm::vec3(0.0f);
-    va = nullptr;
-    vb = nullptr;
-    ib = nullptr;
-    shader = nullptr;
-    texture = nullptr;
-    cam = nullptr;
-    cthulhu = nullptr;
-    
     currentTest = nullptr;
     testMenu = new TestMenu(currentTest);
     currentTest = testMenu;
+
+    //temp
+    cam = nullptr;
+    cthulhu = nullptr;
 }
 
 int Application::OnExecute()
@@ -93,21 +79,20 @@ bool Application::OnInit()
     if (!InitWindow()) return false;
     if (!InitContext()) return false;
     if (!InitGlew()) return false;
+
+    m_Clock = std::make_shared<Time>();
+    m_Renderer = std::make_shared<Renderer>();
     m_GUI = std::make_shared<GUI>(m_Window, m_Context);
-    if (!m_GUI->OnInit()) return false;
+
+    if (!m_GUI->OnInit(m_SourcePath)) return false;
 
     EnableVSync(); 
     EnableBending();
 
-    m_Renderer = std::make_shared<Renderer>();
-    m_Clock = std::make_shared<Time>();
-    
-    TestHandlingData testData{ m_SourcePath, m_Width, m_Height, m_Clock, m_GUI, m_Renderer };
-    
+    AppSystemData testData{ m_SourcePath, m_Width, m_Height, m_Clock, m_Renderer, m_GUI };
     testMenu->RegisterTest<MyTestClearColor>("Clear Color", testData);
     testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", testData);
     
-
     // cthulhu
     /*
     { 
@@ -131,8 +116,6 @@ bool Application::OnInit()
     }
     */
 
-
-
     std::cout << "==== END INIT ====" << std::endl;
 	return true;
 }
@@ -145,29 +128,23 @@ void Application::OnEvent(SDL_Event* currentEvent)
 
 void Application::OnLoop()
 {
-    m_Clock->OnLoop();
+    m_Clock->Update();
+    if (currentTest)
+        currentTest->OnLoop(m_Clock->getDeltaTime());
 }
 
 void Application::OnRender()
 {
     m_Renderer->Clear();
-
-    //  RENDERING STUFF
-
-
-    //  END RENDERING
+    if (currentTest)
+        currentTest->OnRender();
 }
 
 void Application::OnGuiRender()
 {
     m_GUI->NewFrame();
-
-    // GUI RENDERING
-
     if (currentTest) 
     {
-        currentTest->OnLoop(m_Clock->getDeltaTime());
-        currentTest->OnRender();
         m_GUI->BeginWindow("Tests", 0.0f, 0.0f, 250.0f, 100.0f);
         if (currentTest != testMenu && m_GUI->AddButton("<- Back"))
         {
@@ -177,11 +154,7 @@ void Application::OnGuiRender()
         currentTest->OnGuiRender();
         m_GUI->EndWindow();
     }
-
     m_GUI->OnRender();
-
-    // END GUI RENDERING
-
     SDL_GL_SwapWindow(m_Window);
 }
 

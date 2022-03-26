@@ -6,10 +6,10 @@
 #include "imgui.h"
 
 
-MyTestClearColor::MyTestClearColor(const TestHandlingData& testData)
+MyTestClearColor::MyTestClearColor(const AppSystemData& appData)
 	: m_ClearColor{0.2f, 0.3f, 0.8f, 1.0f}
 {
-	data = testData;
+	app = appData;
 }
 
 MyTestClearColor::~MyTestClearColor() 
@@ -28,7 +28,7 @@ void MyTestClearColor::OnRender()
 
 void MyTestClearColor::OnGuiRender()
 {
-	data.pGUI->BeginWindow("Debug", 260.0f, 0.0f, 300.0f, 100.0f);
-	data.pGUI->AddColorEdit4("Clear Color", m_ClearColor);
-	data.pGUI->EndWindow();
+	app.pGUI->BeginWindow("Debug", 260.0f, 0.0f, 300.0f, 100.0f);
+	app.pGUI->AddColorEdit4("Clear Color", m_ClearColor);
+	app.pGUI->EndWindow();
 }

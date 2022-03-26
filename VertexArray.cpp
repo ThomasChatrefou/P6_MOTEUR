@@ -4,6 +4,7 @@
 #include "VertexBuffer.hpp"
 #include "OGLIncludes.hpp"
 
+
 VertexArray::VertexArray()
 {
 	glGenVertexArrays(1, &m_RendererID);

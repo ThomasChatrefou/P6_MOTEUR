@@ -1,7 +1,9 @@
 #pragma once
 
+
 class VertexBuffer;
 class VertexBufferLayout;
+
 
 class VertexArray
 {

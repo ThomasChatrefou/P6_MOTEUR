@@ -1,25 +1,24 @@
 #include "GUI.hpp"
-#include "GetAppPath.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_sdl.h>
 #include <backends/imgui_impl_opengl3.h>
 
 
-#ifndef FontsPath
-const char* FONTS_REPOSITORY_NAME = "../source/dep/imgui/misc/fonts";
-const char* FONT_FILE_NAME = "Karla-Regular.ttf";
+#ifndef FontFile
+#define FontFile
+const std::string FONT_FILE = "dep/imgui/misc/fonts/Karla-Regular.ttf";
 #endif //FontsPath
 
 
-bool GUI::OnInit()
+bool GUI::OnInit(const std::string& sourcePath)
 {
 	std::cout << "Initializing GUI" << std::endl;
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
-	if (!InitStyle()) return false;
+	if (!InitStyle(sourcePath)) return false;
 
 	if (!ImGui_ImplSDL2_InitForOpenGL(m_Window, m_Context))
 	{
@@ -63,18 +62,15 @@ void GUI::OnCleanup()
 
 ///////////////////////////////////////////////////////
 
-bool GUI::InitStyle()
+bool GUI::InitStyle(const std::string& sourcePath)
 {
 	ImGui::StyleColorsDark();
 
-	std::filesystem::path appPath(GetAppPath());
-	auto appDir = appPath.parent_path();
-	auto fontsPath = appDir / FONTS_REPOSITORY_NAME;
-	auto fontPath = fontsPath / FONT_FILE_NAME;
-
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-	pFont = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 16.0f);
+
+	std::string fontPath = sourcePath + FONT_FILE;
+	pFont = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f);
 
 	if (pFont != NULL) return true;
 	std::cout << "ERROR: font file not found" << std::endl;
@@ -139,7 +135,6 @@ void GUI::Debug(glm::vec3& vector)
 	ImGui::End();
 }
 
-
 void GUI::Tool(bool isActive, float color[4])
 {// Create a window called "My First Tool", with a menu bar.
 	ImGui::Begin("My First Tool", &isActive, ImGuiWindowFlags_MenuBar);
@@ -169,5 +164,4 @@ void GUI::Tool(bool isActive, float color[4])
 		ImGui::Text("%04d: Some text", n);
 	ImGui::EndChild();
 	ImGui::End();
-
 }
