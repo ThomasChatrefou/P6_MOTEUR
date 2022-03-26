@@ -28,6 +28,7 @@ void MyTestClearColor::OnRender()
 
 void MyTestClearColor::OnGuiRender()
 {
+	app.pGUI->SetFixedWindowSize(250.0f, 100.0f);
 	app.pGUI->BeginWindow("Debug", 260.0f, 0.0f, 300.0f, 100.0f);
 	app.pGUI->AddColorEdit4("Clear Color", m_ClearColor);
 	app.pGUI->EndWindow();

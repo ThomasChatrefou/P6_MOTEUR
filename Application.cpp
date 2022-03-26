@@ -7,6 +7,7 @@
 #include "MyTest.hpp"
 #include "MyTestClearColor.hpp"
 #include "MyTestTexture2D.hpp"
+#include "MyTestMesh3D.hpp"
 
 #include "Camera.hpp"
 #include "Cthulhu.hpp"
@@ -89,9 +90,10 @@ bool Application::OnInit()
     EnableVSync(); 
     EnableBending();
 
-    AppSystemData testData{ m_SourcePath, m_Width, m_Height, m_Clock, m_Renderer, m_GUI };
-    testMenu->RegisterTest<MyTestClearColor>("Clear Color", testData);
-    testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", testData);
+    AppSystemData appSystemData{ m_SourcePath, m_Width, m_Height, m_Clock, m_Renderer, m_GUI };
+    testMenu->RegisterTest<MyTestClearColor>("Clear Color", appSystemData);
+    testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", appSystemData);
+    testMenu->RegisterTest<MyTestMesh3D>("Mesh 3D", appSystemData);
     
     // cthulhu
     /*

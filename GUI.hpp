@@ -26,6 +26,7 @@ public:
 	bool InitStyle(const std::string& sourcePath);
 	void PrintFPS(float deltaTime);
 	void BeginWindow(const std::string& name, float posX, float posY, float sizeX, float sizeY);
+	void SetFixedWindowSize(float sizeX, float sizeY);
 	void EndWindow();
 
 	bool AddButton(const std::string& name);

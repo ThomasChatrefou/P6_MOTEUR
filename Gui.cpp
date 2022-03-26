@@ -94,6 +94,11 @@ void GUI::BeginWindow(const std::string& name, float posX, float posY, float siz
 	ImGui::SetWindowSize(ImVec2(sizeX, sizeY), ImGuiCond_Once);
 }
 
+void GUI::SetFixedWindowSize(float sizeX, float sizeY)
+{
+	ImGui::SetWindowSize(ImVec2(sizeX, sizeY), ImGuiCond_None);
+}
+
 void GUI::EndWindow() 
 {
 	ImGui::End();

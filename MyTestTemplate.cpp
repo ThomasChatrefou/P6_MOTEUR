@@ -1,11 +1,11 @@
 #include "MyTestTemplate.hpp"
 
-#include "OGLIncludes.hpp"
+#include "Time.hpp"
 #include "Renderer.hpp"
-#include "imgui.h"
+#include "GUI.hpp"
 
 
-MyTestTemplate::MyTestTemplate()
+MyTestTemplate::MyTestTemplate(const AppSystemData& appData)
 {
 }
 
@@ -19,8 +19,6 @@ void MyTestTemplate::OnLoop(float deltaTime)
 
 void MyTestTemplate::OnRender()
 {
-	glClearColor(0.13f, 0.13f, 0.13f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void MyTestTemplate::OnGuiRender()
