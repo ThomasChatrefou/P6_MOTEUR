@@ -109,6 +109,11 @@ bool GUI::AddButton(const std::string& name)
 	return ImGui::Button(name.c_str());
 }
 
+bool GUI::AddSliderInt(const std::string& name, int& value, float min, float max)
+{
+	return ImGui::SliderInt(name.c_str(), &value, min, max);
+}
+
 bool GUI::AddSliderFloat(const std::string& name, float& value, float min, float max)
 {
 	return ImGui::SliderFloat(name.c_str(), &value, min, max);

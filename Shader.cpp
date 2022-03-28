@@ -22,7 +22,7 @@ Shader::~Shader()
 
 ShaderProgramSource Shader::ParseShader(const std::string& filepath)
 {
-    std::cout << "opening shader file at location : " << m_FilePath << std::endl;
+    //std::cout << "opening shader file at location : " << m_FilePath << std::endl;
     std::ifstream stream(filepath);
     std::stringstream ss[2];
     if (stream.is_open())

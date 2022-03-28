@@ -3,6 +3,11 @@
 #include "Application.hpp"
 
 
+extern "C" 
+{
+	_declspec(dllexport) uint32_t NvOptimusEnablement = 0x00000001;
+}
+
 int main(int argc, char* argv[])
 {
 	std::filesystem::path appPath(GetAppPath());
