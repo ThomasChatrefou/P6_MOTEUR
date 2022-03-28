@@ -1,28 +1,28 @@
-#include "MyTestTemplate.hpp"
+#include "MyTestQuantityGen.hpp"
 
 #include "Time.hpp"
 #include "Renderer.hpp"
 #include "GUI.hpp"
 
 
-MyTestTemplate::MyTestTemplate(const AppSystemData& appData)
+MyTestQuantityGen::MyTestQuantityGen(const AppSystemData& appData)
 {
     app = appData;
 }
 
-MyTestTemplate::~MyTestTemplate()
+MyTestQuantityGen::~MyTestQuantityGen()
 {
 }
 
-void MyTestTemplate::OnLoop(float deltaTime)
+void MyTestQuantityGen::OnLoop(float deltaTime)
 {
 }
 
-void MyTestTemplate::OnRender()
+void MyTestQuantityGen::OnRender()
 {
 }
 
-void MyTestTemplate::OnGuiRender()
+void MyTestQuantityGen::OnGuiRender()
 {
     app.pGUI->SetFixedWindowSize(250.0f, 100.0f);
     app.pGUI->PrintFPS(app.pClock->getDeltaTime());

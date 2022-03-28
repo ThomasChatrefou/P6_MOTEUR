@@ -45,9 +45,10 @@ add_executable(MyEngine			Main.cpp
 	Material.hpp				Material.cpp
 	Mesh.hpp					Mesh.cpp
 	MyTest.hpp					MyTest.cpp
-	MyTestMesh3D.hpp			MyTestMesh3D.cpp
 	MyTestClearColor.hpp		MyTestClearColor.cpp
 	MyTestTexture2D.hpp			MyTestTexture2D.cpp
+	MyTestMesh3D.hpp			MyTestMesh3D.cpp
+	MyTestQuantityGen.hpp		MyTestQuantityGen.cpp
 	MyTexture.hpp				MyTexture.cpp
 	Renderer.hpp				Renderer.cpp
 	Scene.hpp					Scene.cpp
