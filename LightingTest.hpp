@@ -14,8 +14,11 @@ public:
 	void OnGuiRender() override;
 
 private:
+<<<<<<< Updated upstream
 	glm::vec3 lightPos;
 
 public:
+=======
+>>>>>>> Stashed changes
 
 };

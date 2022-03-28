@@ -11,7 +11,8 @@
 
 #ifndef ShaderFile
 #define ShaderFile
-const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+//const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+const std::string SHADER_FILE = "resources/shaders/BasicLightning.shader";
 #endif // !ShaderFile
 
 #ifndef CthulhuTextureFile
@@ -61,6 +62,9 @@ void MyTestMesh3D::OnLoop(float deltaTime)
 void MyTestMesh3D::OnRender()
 {
     glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
     model = glm::rotate(model, m_Rotation.x, glm::vec3(1.0f,0.0f,0.0f));
     model = glm::rotate(model, m_Rotation.y, glm::vec3(0.0f,1.0f,0.0f));
     model = glm::rotate(model, m_Rotation.z, glm::vec3(0.0f,0.0f,1.0f));
