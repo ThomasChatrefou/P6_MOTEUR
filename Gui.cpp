@@ -132,6 +132,11 @@ void GUI::SpeedSlider(float& speed)
 	ImGui::End();
 }
 
+bool GUI::AddSliderInt(const std::string& name, int& value, float min, float max)
+{
+	return ImGui::SliderInt(name.c_str(), &value, min, max);
+}
+
 void GUI::Debug(glm::vec3& vector)
 {
 	ImGui::Begin("Debug");
