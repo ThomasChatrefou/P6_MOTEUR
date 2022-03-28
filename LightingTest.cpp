@@ -1,18 +1,14 @@
-#include "MyTestMesh3D.hpp"
+#include "LightingTest.hpp"
+
 
 #include "Time.hpp"
 #include "Renderer.hpp"
 #include "GUI.hpp"
 
-#include "Mesh.hpp"
-#include "Material.hpp"
-#include "Camera.hpp"
-
-
 #ifndef ShaderFile
 #define ShaderFile
 //const std::string SHADER_FILE = "resources/shaders/Basic.shader";
-const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+const std::string SHADER_FILE = "resources/shaders/BasicLighting.shader";
 #endif // !ShaderFile
 
 #ifndef CthulhuTextureFile
@@ -25,14 +21,13 @@ const std::string CTHULHU_TEXTURE_FILE = "resources/textures/Cthulhu_Texture.png
 const std::string CTHULHU_MESH_FILE = "resources/models/Cthulhu.fbx";
 #endif // !CthulhuMeshFile
 
-
-MyTestMesh3D::MyTestMesh3D(const AppSystemData& appData)
-    : m_Translation(0.0f, 0.0f, 0.0f), m_Rotation(0.0f, 0.0f, 0.0f)
+LightingTest::LightingTest(const AppSystemData& appData) : m_Translation(0.0f, 0.0f, 0.0f), m_Rotation(0.0f, 0.0f, 0.0f)
 {
     app = appData;
     auto shaderPath = app.srcPath + SHADER_FILE;
     auto texturePath = app.srcPath + CTHULHU_TEXTURE_FILE;
     auto meshPath = app.srcPath + CTHULHU_MESH_FILE;
+	lightPos = glm::vec3(0.0f, 0.5f, 0.0f);
 
     //temp -> put this into scene
     glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -10.0f);
@@ -51,23 +46,31 @@ MyTestMesh3D::MyTestMesh3D(const AppSystemData& appData)
     m_Material->Unbind();
 }
 
-MyTestMesh3D::~MyTestMesh3D()
+LightingTest::~LightingTest()
+{
+
+}
+
+void LightingTest::OnLoop(float deltaTime)
 {
 }
 
-void MyTestMesh3D::OnLoop(float deltaTime)
+void LightingTest::OnRender()
 {
-}
+    m_Material->Bind();
 
-void MyTestMesh3D::OnRender()
-{
+    m_Material->SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
+    m_Material->SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    m_Material->SetVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
+    m_Material->SetVec3("viewPos", m_Camera->GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z);
+
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
-    model = glm::rotate(model, m_Rotation.x, glm::vec3(1.0f,0.0f,0.0f));
-    model = glm::rotate(model, m_Rotation.y, glm::vec3(0.0f,1.0f,0.0f));
-    model = glm::rotate(model, m_Rotation.z, glm::vec3(0.0f,0.0f,1.0f));
+    model = glm::rotate(model, m_Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, m_Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, m_Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
     model = glm::translate(model, m_Translation);
     glm::mat4 mvp = m_Proj * m_View * model;
 
@@ -75,11 +78,12 @@ void MyTestMesh3D::OnRender()
     app.pRenderer->Draw(*m_Mesh, *m_Material);
 }
 
-void MyTestMesh3D::OnGuiRender()
+void LightingTest::OnGuiRender()
 {
     app.pGUI->SetFixedWindowSize(250.0f, 100.0f);
     app.pGUI->PrintFPS(app.pClock->getDeltaTime());
     app.pGUI->BeginWindow("Debug", 520.0f, 0.0f, 500.0f, 100.0f);
+
     app.pGUI->AddSliderFloat3("Translation", m_Translation, -10.0f, 10.0f);
     app.pGUI->AddSliderFloat3("Rotation", m_Rotation, 0.0f, glm::radians(360.0f));
     app.pGUI->EndWindow();

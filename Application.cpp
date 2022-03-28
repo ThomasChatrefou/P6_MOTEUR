@@ -8,6 +8,7 @@
 #include "MyTestClearColor.hpp"
 #include "MyTestTexture2D.hpp"
 #include "MyTestMesh3D.hpp"
+#include "LightingTest.hpp"
 
 #include "Camera.hpp"
 #include "Cthulhu.hpp"
@@ -15,7 +16,8 @@
 
 #ifndef ShaderFile
 #define ShaderFile
-const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+//const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+const std::string SHADER_FILE = "resources/shaders/BasicLightning.shader";
 #endif // !ShaderFile
 
 #ifndef TextureFile
@@ -92,6 +94,7 @@ bool Application::OnInit()
     testMenu->RegisterTest<MyTestClearColor>("Clear Color", appSystemData);
     testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", appSystemData);
     testMenu->RegisterTest<MyTestMesh3D>("Mesh 3D", appSystemData);
+    testMenu->RegisterTest<LightingTest>("Test Light", appSystemData);
     std::cout << std::endl;
 
     std::cout << "==== END INIT ====" << std::endl;
