@@ -35,10 +35,6 @@ private:
     class MyTest* currentTest;
     class TestMenu* testMenu;
 
-    //cthulhu
-    class Camera* cam;
-    class Cthulhu* cthulhu;
-
 public: // game execution functions
     bool OnInit();
     void OnEvent(SDL_Event* currentEvent);
@@ -53,7 +49,6 @@ public: // init functions
     bool InitContext();
     bool InitGlew();
     void EnableVSync();
-    void EnableBending();
 
 public: // event functions
     void OnQuit();

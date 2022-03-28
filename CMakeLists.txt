@@ -42,6 +42,7 @@ add_executable(MyEngine			Main.cpp
 	Importer.hpp				Importer.cpp
 	IndexBuffer.hpp				IndexBuffer.cpp
 	Inputs.hpp					Inputs.cpp
+	Material.hpp				Material.cpp
 	Mesh.hpp					Mesh.cpp
 	MyTest.hpp					MyTest.cpp
 	MyTestMesh3D.hpp			MyTestMesh3D.cpp
@@ -54,6 +55,7 @@ add_executable(MyEngine			Main.cpp
 	Time.hpp					Time.cpp
 	VertexArray.hpp				VertexArray.cpp
 	VertexBuffer.hpp			VertexBuffer.cpp
+	VertexBufferLayout.hpp
 	OGLIncludes.hpp
 	LoadShader.hpp
 	stb_image.h

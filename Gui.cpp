@@ -7,7 +7,7 @@
 
 #ifndef FontFile
 #define FontFile
-const std::string FONT_FILE = "dep/imgui/misc/fonts/Karla-Regular.ttf";
+const std::string FONT_FILE = "dep/imgui/misc/fonts/Cousine-Regular.ttf";
 #endif //FontsPath
 
 

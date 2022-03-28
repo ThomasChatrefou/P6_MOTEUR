@@ -38,10 +38,6 @@ Application::Application(const std::string& sourcePath, int windowWidth, int win
     currentTest = nullptr;
     testMenu = new TestMenu(currentTest);
     currentTest = testMenu;
-
-    //temp
-    cam = nullptr;
-    cthulhu = nullptr;
 }
 
 int Application::OnExecute()
@@ -88,35 +84,15 @@ bool Application::OnInit()
     if (!m_GUI->OnInit(m_SourcePath)) return false;
 
     EnableVSync(); 
-    EnableBending();
+    m_Renderer->EnableBlending();
+    m_Renderer->EnableDepthTest();
 
+    std::cout << "Registering tests : ";
     AppSystemData appSystemData{ m_SourcePath, m_Width, m_Height, m_Clock, m_Renderer, m_GUI };
     testMenu->RegisterTest<MyTestClearColor>("Clear Color", appSystemData);
     testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", appSystemData);
     testMenu->RegisterTest<MyTestMesh3D>("Mesh 3D", appSystemData);
-    
-    // cthulhu
-    /*
-    { 
-        //temp -> put this into scene
-        glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -3.0f);
-        glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
-        float fov = 45.0f;
-
-        cam = new Camera();
-        cam->OnInit(camPos, target, fov, (float)m_Width / (float)m_Height, 0.1f, 100.0f);
-
-        cthulhu = new Cthulhu();
-        cthulhu->OnInit(CTHULHU_MODEL_PATH);
-    
-
-        glm::mat4 proj = cam->GetProjectionMatrix();
-        glm::mat4 view = cam->GetLookAtMatrix();
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 _mvp = proj * view * model;
-
-    }
-    */
+    std::cout << std::endl;
 
     std::cout << "==== END INIT ====" << std::endl;
 	return true;
@@ -241,12 +217,6 @@ bool Application::InitGlew()
 void Application::EnableVSync()
 {
     SDL_GL_SetSwapInterval(1);
-}
-
-void Application::EnableBending()
-{
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 //////////////////////////////////////////////////////

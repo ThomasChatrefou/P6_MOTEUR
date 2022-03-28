@@ -56,6 +56,6 @@ private:
 template<typename T>
 void TestMenu::RegisterTest(const std::string& name, const AppSystemData& appData)
 {
-	std::cout << "Registering test " << name << std::endl;
+	std::cout << " " << name << " ";
 	m_Tests.push_back(std::make_pair(name, [appData]() { return new T(appData); }));
 }
