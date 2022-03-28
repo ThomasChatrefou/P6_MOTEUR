@@ -1,7 +1,6 @@
 #pragma once
 #include "OGLIncludes.hpp"
 
-
 class Buffer
 {
 public:
@@ -20,6 +19,7 @@ public:
 	void CreateBuffer(const GLfloat* iData, size_t iSize);
 	void BindBufferToAttrib(int attribut, int size, int stride, int arrayOffset);
 	void Vao();
+	
 };
 
 

@@ -1,31 +1,43 @@
 #include "Application.hpp"
-#include "GUI.hpp"
+
 #include "Time.hpp"
+#include "Renderer.hpp"
+#include "GUI.hpp"
+
+#include "MyTest.hpp"
+#include "MyTestClearColor.hpp"
+#include "MyTestTexture2D.hpp"
+#include "MyTestMesh3D.hpp"
+
 #include "Camera.hpp"
 #include "Cthulhu.hpp"
 
-#include "Buffer.hpp"
-#include "Renderer.hpp"
-#include "Mesh.hpp"
+
+#ifndef ShaderFile
+#define ShaderFile
+const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+#endif // !ShaderFile
+
+#ifndef TextureFile
+#define TextureFile
+const std::string TEXTURE_FILE = "resources/textures/zote.jpg";
+#endif // !TextureFile
+
+#ifndef CthulhuModelFile
+#define CthulhuModelFile
+const std::string CTHULHU_MODEL_FILE = "resources/models/Cthulhu.fbx";
+#endif // !CthulhuModelFile
 
 
-#ifndef ShadersPath
-char* SHADERS_REPOSITORY_NAME = "shaders";
-char* VERTEX_SHADERS_FILE_NAME = "SimpleVertexShader.glsl";
-char* FRAGMENT_SHADERS_FILE_NAME = "SimpleFragmentShader.glsl";
-#endif //ShaderPath
-
-
-Application::Application(int windowWidth, int windowHeight)
+Application::Application(const std::string& sourcePath, int windowWidth, int windowHeight) :
+    m_SourcePath(sourcePath), m_AppRunning(true),
+    m_Width(windowWidth), m_Height(windowHeight),
+    m_Window(NULL), m_Context(NULL),
+    m_Clock(nullptr), m_GUI(nullptr), m_Renderer(nullptr)
 {
-    m_AppRunning = true;
-    m_Width = windowWidth;
-    m_Height = windowHeight;
-    m_Window = NULL;
-    m_Context = NULL;
-
-    m_Clock = new Time();
-    m_GUI = nullptr;
+    currentTest = nullptr;
+    testMenu = new TestMenu(currentTest);
+    currentTest = testMenu;
 }
 
 int Application::OnExecute()
@@ -45,8 +57,8 @@ int Application::OnExecute()
         }
 
         OnLoop();
-
         OnRender();
+        OnGuiRender();
     }
 
     OnCleanup();
@@ -65,23 +77,22 @@ bool Application::OnInit()
     if (!InitContext()) return false;
     if (!InitGlew()) return false;
 
-    m_GUI = new GUI(m_Window, m_Context);
-    if (!m_GUI->OnInit()) return false;
+    m_Clock = std::make_shared<Time>();
+    m_Renderer = std::make_shared<Renderer>();
+    m_GUI = std::make_shared<GUI>(m_Window, m_Context);
 
-    //temp -> put this into scene
-    glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -3.0f);
-    glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
-    float fov = 45.0f;
+    if (!m_GUI->OnInit(m_SourcePath)) return false;
 
-    cam = new Camera();
-    cam->OnInit(camPos, target, fov, (float)m_Width / (float)m_Height, 0.1f, 100.0f);
+    EnableVSync(); 
+    m_Renderer->EnableBlending();
+    m_Renderer->EnableDepthTest();
 
-
-    glm::mat4 proj = cam->GetProjectionMatrix();
-    glm::mat4 view = cam->GetLookAtMatrix();
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 _mvp = proj * view * model;
-    //end temp
+    std::cout << "Registering tests : ";
+    AppSystemData appSystemData{ m_SourcePath, m_Width, m_Height, m_Clock, m_Renderer, m_GUI };
+    testMenu->RegisterTest<MyTestClearColor>("Clear Color", appSystemData);
+    testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", appSystemData);
+    testMenu->RegisterTest<MyTestMesh3D>("Mesh 3D", appSystemData);
+    std::cout << std::endl;
 
     std::cout << "==== END INIT ====" << std::endl;
 	return true;
@@ -95,27 +106,42 @@ void Application::OnEvent(SDL_Event* currentEvent)
 
 void Application::OnLoop()
 {
-    m_Clock->OnLoop();
-    m_GUI->OnLoop();
-    m_GUI->PrintFPS(m_Clock->getDeltaTime());
+    m_Clock->Update();
+    if (currentTest)
+        currentTest->OnLoop(m_Clock->getDeltaTime());
 }
 
 void Application::OnRender()
 {
-    ResetWindow();
+    m_Renderer->Clear();
+    if (currentTest)
+        currentTest->OnRender();
+}
+
+void Application::OnGuiRender()
+{
+    m_GUI->NewFrame();
+    if (currentTest) 
+    {
+        m_GUI->BeginWindow("Tests", 0.0f, 0.0f, 250.0f, 100.0f);
+        if (currentTest != testMenu && m_GUI->AddButton("<- Back"))
+        {
+            delete currentTest;
+            currentTest = testMenu;
+        }
+        currentTest->OnGuiRender();
+        m_GUI->EndWindow();
+    }
     m_GUI->OnRender();
-
-    //  RENDERING STUFF
-
-
-
-    //  END RENDERING
-
     SDL_GL_SwapWindow(m_Window);
 }
 
 void Application::OnCleanup()
 {
+    if (currentTest != testMenu)
+        delete testMenu;
+    delete currentTest;
+
     m_GUI->OnCleanup();
     SDL_Quit();
 }
@@ -161,16 +187,21 @@ bool Application::InitContext()
 
     m_Context = SDL_GL_CreateContext(m_Window);
 
-    if (m_Context != NULL)
+    if (m_Context == NULL)
     {
-        if (SDL_GL_MakeCurrent(m_Window, m_Context) >= 0) return true;
-
+        std::cout << "ERROR: SDL context creation failed" << std::endl;
+        return false;
+    }
+    if (SDL_GL_MakeCurrent(m_Window, m_Context) < 0)
+    {
         std::cout << "ERROR: OpenGL context setup failed" << std::endl;
         return false;
     }
 
-    std::cout << "ERROR: SDL context creation failed" << std::endl;
-    return false;
+    glViewport(0, 0, m_Width, m_Height);
+    glClearColor(0.13f, 0.13f, 0.13f, 0.0f);
+
+    return true;
 }
 
 bool Application::InitGlew()
@@ -183,18 +214,14 @@ bool Application::InitGlew()
     return false;
 }
 
+void Application::EnableVSync()
+{
+    SDL_GL_SetSwapInterval(1);
+}
+
 //////////////////////////////////////////////////////
 
 void Application::OnQuit()
 {
     m_AppRunning = false;
-}
-
-//////////////////////////////////////////////////////
-
-void Application::ResetWindow()
-{
-    glViewport(0, 0, m_Width, m_Height);
-    glClearColor(0.13f, 0.13f, 0.13f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

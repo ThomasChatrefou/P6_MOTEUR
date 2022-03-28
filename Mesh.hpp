@@ -1,66 +1,37 @@
 #pragma once
 #include "OGLIncludes.hpp"
 
+#include "VertexArray.hpp"
+#include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
+
+
+struct MeshData
+{
+    float* data;
+    unsigned int* indices;
+    unsigned int dataCount;
+    unsigned int indicesCount;
+    unsigned int dim;
+};
+
+
 class Mesh
 {
 public:
-	Mesh();
-	~Mesh();
+    Mesh(const std::string& pFile);
+    Mesh(const MeshData meshData, bool hasUV = true, bool hasNormals = true);
+
+    void BufferMesh(const MeshData meshData, bool hasUV = true, bool hasNormals = true);
+
+    void Bind() const;
+    void Unbind() const;
+
+    unsigned int getDataCount() const;
+    unsigned int getIndicesCount() const;
+
 private:
-
-};
-
-struct PrimitiveCube
-{
-    //These arrays should all have the same size.
-    //They can be empty as well
-    Vector<glm::vec3> m_Pos;
-    Vector<glm::vec3> m_Normals;
-    Vector<glm::vec2> m_TexCoord;
-
-    Vector<uint32_t> m_Indices;
-};
-
-static const float CubeVertices[] = {
-  -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-   0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-   0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-   0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-  -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-  -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-  -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-   0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-   0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-   0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-  -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-  -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-  -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-  -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-  -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-  -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-  -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-  -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-   0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-   0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-   0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-   0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-   0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-   0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-  -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-   0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-   0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-   0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-  -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-  -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-  -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-   0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-   0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-   0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-  -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-  -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    std::unique_ptr<VertexArray> m_VAO;
+    std::unique_ptr<VertexBuffer> m_VBO;
+    std::unique_ptr<IndexBuffer> m_IndexBuffer;
 };

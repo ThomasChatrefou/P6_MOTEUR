@@ -1,31 +1,22 @@
 #pragma once
-#include "OGLIncludes.hpp"
-#include "Shader.hpp"
-#include "Actor.hpp"
 
-class Renderer
+
+class VertexArray;
+class IndexBuffer;
+class Shader;
+class Mesh;
+class Material;
+
+
+class Renderer 
 {
-public:
-	void CubeRendering();
-public:
-    void BindMaterials();
-    void BindMesh();
-    void Draw();
-
 private:
 
-};
+public:
+    void Clear() const;
+    void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+    void Draw(const Mesh& mesh, const Material& material) const;
 
-static const glm::vec3 cubePositions[] = {
-        glm::vec3(0.0f,  0.0f, 0.0f),
-        glm::vec3(2.0f,  0.0f, 0.0f),
-        glm::vec3(4.0f,  0.0f, 0.0f),
-        glm::vec3(6.0f,  0.0f, 0.0f),
-        glm::vec3(8.0f,  0.0f, 0.0f),
-        glm::vec3(10.0f, 0.0f, 0.0f),
-        glm::vec3(12.0f, 0.0f, 0.0f),
-        glm::vec3(14.0f, 0.0f, 0.0f),
-        glm::vec3(16.0f, 0.0f, 0.0f),
-        glm::vec3(18.0f, 0.0f, 0.0f),
-        glm::vec3(20.0f, 0.0f, 0.0f)
+    void EnableBlending();
+    void EnableDepthTest();
 };

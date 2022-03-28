@@ -16,11 +16,11 @@ Cthulhu::~Cthulhu()
 
 }
 
-bool Cthulhu::OnInit()
+bool Cthulhu::OnInit(const char* filePath)
 {
 	std::filesystem::path appPath(GetAppPath());
 	auto const appDir = appPath.parent_path();
-	auto const modelPath = appDir / "../../source/resources/FBX/Cthulhu.fbx";
+	auto const modelPath = appDir / filePath;
 	Importer::DoTheImportThing(modelPath.string().c_str(), m_Indices, m_Vertices, m_UV, m_Normals);
 
 	PrepareForRenderingWithVAO();
@@ -49,9 +49,9 @@ void Cthulhu::PrepareForRenderingWithVAO()
 	glBindBuffer(GL_ARRAY_BUFFER, m_UVBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_UV.size() * sizeof(glm::vec2), m_UV.data(), GL_STATIC_DRAW);
 
-	int mvpUniformLocation = 1;
-	glEnableVertexAttribArray(mvpUniformLocation);
-	glVertexAttribPointer(mvpUniformLocation, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	int TextureCoordinatesLocation = 1;
+	glEnableVertexAttribArray(TextureCoordinatesLocation);
+	glVertexAttribPointer(TextureCoordinatesLocation, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glGenBuffers(1, &m_ElementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ElementBuffer);

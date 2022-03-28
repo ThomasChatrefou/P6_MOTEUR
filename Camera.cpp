@@ -1,5 +1,6 @@
 #include "Camera.hpp"
 
+
 Camera::Camera()
 {
     _fov = 45.0f;
@@ -18,7 +19,6 @@ Camera::Camera()
 
 Camera::~Camera()
 {
-
 }
 
 void Camera::OnInit(glm::vec3& position, glm::vec3& target, float fov, float ratio, float minDisplayDepth, float maxDisplayDepth)

@@ -2,6 +2,7 @@
 
 #include "OGLIncludes.hpp"
 
+
 class Camera
 {
 public:
