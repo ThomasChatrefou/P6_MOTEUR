@@ -24,6 +24,11 @@ private:
 	glm::mat4 m_Proj;
 	glm::mat4 m_View;
 
+	float ambientStrength;
+	float specularStrength;
+	int specularPower;
+
+
 	std::unique_ptr<Camera> m_Camera;
 	std::unique_ptr<Mesh> m_Mesh;
 	std::unique_ptr<Material> m_Material;
