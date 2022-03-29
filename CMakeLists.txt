@@ -32,11 +32,8 @@ else()
 endif()
 
 add_executable(MyEngine			Main.cpp 
-	Actor.hpp					Actor.cpp
 	Application.hpp				Application.cpp
-	Buffer.hpp					Buffer.cpp
 	Camera.hpp					Camera.cpp
-	Cthulhu.hpp					Cthulhu.cpp
 	GetAppPath.hpp				GetAppPath.cpp
 	GUI.hpp						GUI.cpp
 	Importer.hpp				Importer.cpp
