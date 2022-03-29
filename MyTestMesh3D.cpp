@@ -11,17 +11,17 @@
 
 #ifndef ShaderFile
 #define ShaderFile
-const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+const std::string SHADER_FILE = "/resources/shaders/Basic.shader";
 #endif // !ShaderFile
 
 #ifndef CthulhuTextureFile
 #define CthulhuTextureFile
-const std::string CTHULHU_TEXTURE_FILE = "resources/textures/Cthulhu_Texture.png";
+const std::string CTHULHU_TEXTURE_FILE = "/resources/textures/Cthulhu_Texture.png";
 #endif // !CthulhuTextureFile
 
 #ifndef CthulhuMeshFile
 #define CthulhuMeshFile
-const std::string CTHULHU_MESH_FILE = "resources/models/Cthulhu.fbx";
+const std::string CTHULHU_MESH_FILE = "/resources/models/Cthulhu.fbx";
 #endif // !CthulhuMeshFile
 
 

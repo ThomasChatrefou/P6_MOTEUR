@@ -7,7 +7,7 @@
 
 #ifndef FontFile
 #define FontFile
-const std::string FONT_FILE = "dep/imgui/misc/fonts/Cousine-Regular.ttf";
+const std::string FONT_FILE = "/resources/fontsGUI/Cousine-Regular.ttf";
 #endif //FontsPath
 
 
@@ -70,6 +70,7 @@ bool GUI::InitStyle(const std::string& sourcePath)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
 
 	std::string fontPath = sourcePath + FONT_FILE;
+	std::cout << fontPath << std::endl;
 	pFont = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f);
 
 	if (pFont != NULL) return true;

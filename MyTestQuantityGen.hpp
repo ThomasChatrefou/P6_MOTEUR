@@ -24,9 +24,9 @@ public:
 private:
 
 	float r, theta, phi;
+	glm::vec3 m_SphericalCoord;
 
 	int m_NMaxEntities;
-	glm::vec3 m_SphericalCoord;
 	std::unique_ptr<Camera> m_Camera;
 
 	std::vector<glm::mat4> m_MVPs;

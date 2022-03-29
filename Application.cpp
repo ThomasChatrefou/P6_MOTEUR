@@ -16,22 +16,22 @@
 
 #ifndef ShaderFile
 #define ShaderFile
-const std::string SHADER_FILE = "resources/shaders/Basic.shader";
+const std::string SHADER_FILE = "/resources/shaders/Basic.shader";
 #endif // !ShaderFile
 
 #ifndef TextureFile
 #define TextureFile
-const std::string TEXTURE_FILE = "resources/textures/zote.jpg";
+const std::string TEXTURE_FILE = "/resources/textures/zote.jpg";
 #endif // !TextureFile
 
 #ifndef CthulhuModelFile
 #define CthulhuModelFile
-const std::string CTHULHU_MODEL_FILE = "resources/models/Cthulhu.fbx";
+const std::string CTHULHU_MODEL_FILE = "/resources/models/Cthulhu.fbx";
 #endif // !CthulhuModelFile
 
 
-Application::Application(const std::string& sourcePath, int windowWidth, int windowHeight) :
-    m_SourcePath(sourcePath), m_AppRunning(true),
+Application::Application(const std::string& appPath, int windowWidth, int windowHeight) :
+    m_AppPath(appPath), m_AppRunning(true),
     m_Width(windowWidth), m_Height(windowHeight),
     m_Window(NULL), m_Context(NULL),
     m_Clock(nullptr), m_GUI(nullptr), m_Renderer(nullptr)
@@ -82,14 +82,14 @@ bool Application::OnInit()
     m_Renderer = std::make_shared<Renderer>();
     m_GUI = std::make_shared<GUI>(m_Window, m_Context);
 
-    if (!m_GUI->OnInit(m_SourcePath)) return false;
+    if (!m_GUI->OnInit(m_AppPath)) return false;
 
     EnableVSync(); 
     m_Renderer->EnableBlending();
     m_Renderer->EnableDepthTest();
 
     std::cout << "Registering tests : ";
-    AppSystemData appSystemData{ m_SourcePath, m_Width, m_Height, m_Clock, m_Renderer, m_GUI };
+    AppSystemData appSystemData{ m_AppPath, m_Width, m_Height, m_Clock, m_Renderer, m_GUI };
     testMenu->RegisterTest<MyTestClearColor>("Clear Color", appSystemData);
     testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", appSystemData);
     testMenu->RegisterTest<MyTestMesh3D>("Mesh 3D", appSystemData);
