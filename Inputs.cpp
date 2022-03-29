@@ -12,7 +12,16 @@ void Inputs::OnEvent(SDL_Event* currentEvent)
 	case SDL_QUIT:
 		OnQuit();
 		break;
+	case SDL_KEYDOWN:
+		switch (currentEvent->key.keysym.sym)
+		{
+		case SDLK_ESCAPE:
+			OnQuit();
+			break;
+		}
+		break;
 	}
+	
 }
 
 void Inputs::OnQuit()
