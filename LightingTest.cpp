@@ -21,12 +21,29 @@ const std::string CTHULHU_TEXTURE_FILE = "resources/textures/Cthulhu_Texture.png
 const std::string CTHULHU_MESH_FILE = "resources/models/Cthulhu.fbx";
 #endif // !CthulhuMeshFile
 
+
+#ifndef CactusTextureFile
+#define CactusTextureFile
+const std::string CACTUS_TEXTURE_FILE = "resources/textures/Cactus_Texture.png";
+#endif // !CactusTextureFile
+
+#ifndef CactusMeshFile
+#define CactusMeshFile
+const std::string CACTUS_MESH_FILE = "resources/models/Cactus.fbx";
+#endif // !CactusMeshFile
+
+
+
 LightingTest::LightingTest(const AppSystemData& appData) : m_Translation(0.0f, 0.0f, 0.0f), m_Rotation(0.0f, 0.0f, 0.0f)
 {
     app = appData;
     auto shaderPath = app.srcPath + SHADER_FILE;
-    auto texturePath = app.srcPath + CTHULHU_TEXTURE_FILE;
-    auto meshPath = app.srcPath + CTHULHU_MESH_FILE;
+
+    auto cthlhuTexturePath = app.srcPath + CTHULHU_TEXTURE_FILE;
+    auto cthulhuMeshPath = app.srcPath + CTHULHU_MESH_FILE;
+
+    auto kaktusTexturePath = app.srcPath + CACTUS_TEXTURE_FILE;
+    auto kaktusMeshPath = app.srcPath + CACTUS_MESH_FILE;
 	lightPos = glm::vec3(0.0f, 0.5f, 0.0f);
 
     //temp -> put this into scene
@@ -43,11 +60,19 @@ LightingTest::LightingTest(const AppSystemData& appData) : m_Translation(0.0f, 0
     m_Proj = m_Camera->GetProjectionMatrix();
     m_View = m_Camera->GetLookAtMatrix();
 
-    m_Mesh = std::make_unique<Mesh>(meshPath);
-    m_Material = std::make_unique<Material>(shaderPath, texturePath);
 
-    m_Mesh->Unbind();
-    m_Material->Unbind();
+    m_Meshes.push_back(std::make_shared<Mesh>(cthulhuMeshPath));
+    m_Materials.push_back(std::make_shared<Material>(shaderPath, cthlhuTexturePath));
+    
+    m_Meshes.push_back(std::make_shared<Mesh>(kaktusMeshPath));
+    m_Materials.push_back(std::make_shared<Material>(shaderPath, kaktusTexturePath));
+
+    m_CurrentMesh = m_Meshes[0];
+    m_CurrentMaterial = m_Materials[0];
+
+
+    m_CurrentMesh->Unbind();
+    m_CurrentMaterial->Unbind();
 }
 
 LightingTest::~LightingTest()
@@ -61,16 +86,16 @@ void LightingTest::OnLoop(float deltaTime)
 
 void LightingTest::OnRender()
 {
-    m_Material->Bind();
+    m_CurrentMaterial->Bind();
 
-    m_Material->SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
-    m_Material->SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
-    m_Material->SetVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
-    m_Material->SetVec3("viewPos", m_Camera->GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z);
+    m_CurrentMaterial->SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
+    m_CurrentMaterial->SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    m_CurrentMaterial->SetVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
+    m_CurrentMaterial->SetVec3("viewPos", m_Camera->GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z);
 
-    m_Material->SetFloat("ambientStrength", ambientStrength);
-    m_Material->SetFloat("specularStrength", specularStrength);
-    m_Material->SetInt("specularPower", std::pow(2, specularPower));
+    m_CurrentMaterial->SetFloat("ambientStrength", ambientStrength);
+    m_CurrentMaterial->SetFloat("specularStrength", specularStrength);
+    m_CurrentMaterial->SetInt("specularPower", std::pow(2, specularPower));
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -82,8 +107,8 @@ void LightingTest::OnRender()
     model = glm::translate(model, m_Translation);
     glm::mat4 mvp = m_Proj * m_View * model;
 
-    m_Material->UpdateMVP(mvp);
-    app.pRenderer->Draw(*m_Mesh, *m_Material);
+    m_CurrentMaterial->UpdateMVP(mvp);
+    app.pRenderer->Draw(*m_CurrentMesh, *m_CurrentMaterial);
 }
 
 void LightingTest::OnGuiRender()
@@ -100,5 +125,20 @@ void LightingTest::OnGuiRender()
     app.pGUI->AddSliderFloat("Ambiant Strength", ambientStrength, 0.0f, 1.0f);
     app.pGUI->AddSliderFloat("Specular Strength", specularStrength, 0.0f, 1.0f);
     app.pGUI->AddSliderInt("Specular Power", specularPower, 0, 8);
+    app.pGUI->EndWindow();
+
+    app.pGUI->BeginWindow("Mesh", 0.0f, app.winHeight - 90.0f, 250.0f, 90.0f);
+    if (app.pGUI->AddButton("Invoke the mighty Cthulhu"))
+    {
+        m_CurrentMesh = m_Meshes[0];
+        m_CurrentMaterial = m_Materials[0];
+    }
+
+    if (app.pGUI->AddButton("Invoke the terrible Kaktus"))
+    {
+        m_CurrentMesh = m_Meshes[1];
+        m_CurrentMaterial = m_Materials[1];
+    }
+    
     app.pGUI->EndWindow();
 }
