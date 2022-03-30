@@ -32,7 +32,7 @@ const std::string CACTUS_MESH_FILE = "resources/models/Cactus.fbx";
 
 
 LightingTest::LightingTest(const AppSystemData& appData)
-    : m_Translation(0.0f, 0.0f, 0.0f), m_Rotation(0.0f, 0.0f, 0.0f), lightColor{ 1.0f, 1.0f, 1.0f, 1.0f }, m_SphericalCoord(10.0f, 45.0f, 45.0f)
+    : m_Translation(0.0f, 0.0f, 0.0f), m_Rotation(0.0f, 0.0f, 0.0f), lightColor{ 1.0f, 1.0f, 1.0f, 1.0f }, m_SphericalCoord(10.0f, 270.0f, 80.0f)
 {
     //------------------------Path------------------------------//
     app = appData;
@@ -132,13 +132,12 @@ void LightingTest::OnGuiRender()
     app.pGUI->PrintFPS(app.pClock->getDeltaTime());
 
     //===============================Model Movement==================================//
-    app.pGUI->BeginWindow("Movements", 520.0f, 0.0f, 500.0f, 250.0f);
+    app.pGUI->BeginWindow("Mesh Movements", 520.0f, 0.0f, 500.0f, 200.0f);
                     //-----------------------------------------//
     app.pGUI->AddSliderFloat3("Translation", m_Translation, -10.0f, 10.0f);
     app.pGUI->AddSliderFloat3("Rotation", m_Rotation, 0.0f, glm::radians(360.0f));
-    app.pGUI->AddSliderFloat3("Light Position", lightPos, -10.0f, 10.0f);
             //-----------------------Orbital Camera---------------------//
-    ImGui::Text("Spherical movements");
+    ImGui::Text("Camera Spherical Movements");
     app.pGUI->AddSliderFloat("Distance", m_SphericalCoord.x, 0.0f, 10.0f);
     app.pGUI->AddSliderFloat("Longitude", m_SphericalCoord.y, 0.0f, 360.0f);
     app.pGUI->AddSliderFloat("Colatitude", m_SphericalCoord.z, 0.0f, 180.0f);
@@ -147,8 +146,9 @@ void LightingTest::OnGuiRender()
 
 
     //===============================Light Settings==================================//
-    app.pGUI->BeginWindow("Light Settings", app.winWidth - 500.0f, 0.0f, 500.0f, 200.0f);
+    app.pGUI->BeginWindow("Light Settings", app.winWidth - 500.0f, 0.0f, 500.0f, 175.0f);
                     //-----------------------------------------//
+    app.pGUI->AddSliderFloat3("Light Position", lightPos, -10.0f, 10.0f);
     app.pGUI->AddSliderFloat("Ambiant Strength", ambientStrength, 0.0f, 1.0f);
     app.pGUI->AddSliderFloat("Specular Strength", specularStrength, 0.0f, 1.0f);
     app.pGUI->AddSliderInt("Specular Power", specularPower, 0, 8);
