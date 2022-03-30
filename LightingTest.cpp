@@ -20,15 +20,30 @@ const std::string CTHULHU_TEXTURE_FILE = "resources/textures/Cthulhu_Texture.png
 const std::string CTHULHU_MESH_FILE = "resources/models/Cthulhu.fbx";
 #endif // !CthulhuMeshFile
 
-LightingTest::LightingTest(const AppSystemData& appData) 
+#ifndef CactusTextureFile
+#define CactusTextureFile
+const std::string CACTUS_TEXTURE_FILE = "resources/textures/Cactus_Texture.png";
+#endif // !CactusTextureFile
+
+#ifndef CactusMeshFile
+#define CactusMeshFile
+const std::string CACTUS_MESH_FILE = "resources/models/Cactus.fbx";
+#endif // !CactusMeshFile
+
+
+LightingTest::LightingTest(const AppSystemData& appData)
     : m_Translation(0.0f, 0.0f, 0.0f), m_Rotation(0.0f, 0.0f, 0.0f), lightColor{ 1.0f, 1.0f, 1.0f, 1.0f }, m_SphericalCoord(10.0f, 45.0f, 45.0f)
 {
     //-------------------Directory------------------------------//
 
     app = appData;
     auto shaderPath = app.srcPath + SHADER_FILE;
-    auto texturePath = app.srcPath + CTHULHU_TEXTURE_FILE;
-    auto meshPath = app.srcPath + CTHULHU_MESH_FILE;
+    
+    auto cthulhuTexturePath = app.srcPath + CTHULHU_TEXTURE_FILE;
+    auto cthulhuMeshPath = app.srcPath + CTHULHU_MESH_FILE;
+
+    auto kaktusTexturePath = app.srcPath + CACTUS_TEXTURE_FILE;
+    auto kaktusMeshPath = app.srcPath + CACTUS_MESH_FILE;
 
     //-------------------Directory------------------------------//
 
@@ -52,10 +67,17 @@ LightingTest::LightingTest(const AppSystemData& appData)
     m_View = m_Camera->GetLookAtMatrix();
     //----------------------------------------------------------------------------------------------//
 
-    m_Mesh = std::make_unique<Mesh>(meshPath);
-    m_Material = std::make_unique<Material>(shaderPath, texturePath);
-    m_Mesh->Unbind();
-    m_Material->Unbind();
+    m_Meshes.push_back(std::make_shared<Mesh>(cthulhuMeshPath));
+    m_Materials.push_back(std::make_shared<Material>(shaderPath, cthulhuTexturePath));
+
+    m_Meshes.push_back(std::make_shared<Mesh>(kaktusMeshPath));
+    m_Materials.push_back(std::make_shared<Material>(shaderPath, kaktusTexturePath));
+
+    m_CurrentMesh = m_Meshes[0];
+    m_CurrentMaterial = m_Materials[0];
+
+    m_CurrentMesh->Unbind();
+    m_CurrentMaterial->Unbind();
 }
 
 LightingTest::~LightingTest()
@@ -84,14 +106,14 @@ void LightingTest::OnRender()
 
     //-------------------------------Shader----------------------------------------//
 
-    m_Material->Bind();
-    m_Material->SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
-    m_Material->SetVec3("lightColor", lightColor[0], lightColor[1], lightColor[2]);
-    m_Material->SetVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
-    m_Material->SetVec3("viewPos", m_Camera->GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z);
-    m_Material->SetFloat("ambientStrength", ambientStrength);
-    m_Material->SetFloat("specularStrength", specularStrength);
-    m_Material->SetInt("specularPower", std::pow(2, specularPower));
+    m_CurrentMaterial->Bind();
+    m_CurrentMaterial->SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
+    m_CurrentMaterial->SetVec3("lightColor", lightColor[0], lightColor[1], lightColor[2]);
+    m_CurrentMaterial->SetVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
+    m_CurrentMaterial->SetVec3("viewPos", m_Camera->GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z);
+    m_CurrentMaterial->SetFloat("ambientStrength", ambientStrength);
+    m_CurrentMaterial->SetFloat("specularStrength", specularStrength);
+    m_CurrentMaterial->SetInt("specularPower", std::pow(2, specularPower));
 
     //-------------------------------Matrice----------------------------------------//
 
@@ -106,8 +128,8 @@ void LightingTest::OnRender()
     glm::mat4 mvp = proj * view * model;
 
     //-----------------------------------------------------------------------------//
-    m_Material->UpdateMVP(mvp);
-    app.pRenderer->Draw(*m_Mesh, *m_Material);
+    m_CurrentMaterial->UpdateMVP(mvp);
+    app.pRenderer->Draw(*m_CurrentMesh, *m_CurrentMaterial);
 }
 
 void LightingTest::OnGuiRender()
@@ -123,7 +145,7 @@ void LightingTest::OnGuiRender()
     app.pGUI->AddSliderFloat3("Translation", m_Translation, -10.0f, 10.0f);
     app.pGUI->AddSliderFloat3("Rotation", m_Rotation, 0.0f, glm::radians(360.0f));
     app.pGUI->AddSliderFloat3("Light Position", lightPos, -10.0f, 10.0f);
-   //--------------Orbital Camera-------------//
+    //--------------Orbital Camera-------------//
     ImGui::Text("Spherical movements");
     app.pGUI->AddSliderFloat("Distance", m_SphericalCoord.x, 0.0f, 10.0f);
     app.pGUI->AddSliderFloat("Longitude", m_SphericalCoord.y, 0.0f, 360.0f);
@@ -141,5 +163,23 @@ void LightingTest::OnGuiRender()
     app.pGUI->AddSliderInt("Specular Power", specularPower, 0, 8);
     app.pGUI->AddColorEdit4("Light Color", lightColor);
     //-----------------------------------------------------------------------------------//
+    app.pGUI->EndWindow();
+
+
+    //=========================================================
+    app.pGUI->BeginWindow("Mesh", 0.0f, app.winHeight - 90.0f, 250.0f, 90.0f);
+    //-----------------------------------------------//
+
+    if (app.pGUI->AddButton("Invoke the mighty Cthulhu"))
+    {
+        m_CurrentMesh = m_Meshes[0];
+        m_CurrentMaterial = m_Materials[0];
+    }
+    if (app.pGUI->AddButton("Invoke the terrible Kaktus"))
+    {
+        m_CurrentMesh = m_Meshes[1];
+        m_CurrentMaterial = m_Materials[1];
+    }
+    //-----------------------------------------------//
     app.pGUI->EndWindow();
 }

@@ -30,13 +30,19 @@ private:
 	//Lighting
 	glm::vec3 lightPos;
 	float lightColor[4];
+
 	float ambientStrength;
 	float specularStrength;
 	int specularPower;
 
+
+
 	std::unique_ptr<Camera> m_Camera;
-	std::unique_ptr<Mesh> m_Mesh;
-	std::unique_ptr<Material> m_Material;
+	std::shared_ptr<Mesh> m_CurrentMesh;
+	std::shared_ptr<Material> m_CurrentMaterial;
+
+	std::vector<std::shared_ptr<Mesh>> m_Meshes;
+	std::vector<std::shared_ptr<Material>> m_Materials;
 
 public:
 
