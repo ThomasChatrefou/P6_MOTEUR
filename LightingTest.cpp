@@ -34,8 +34,7 @@ const std::string CACTUS_MESH_FILE = "resources/models/Cactus.fbx";
 LightingTest::LightingTest(const AppSystemData& appData)
     : m_Translation(0.0f, 0.0f, 0.0f), m_Rotation(0.0f, 0.0f, 0.0f), lightColor{ 1.0f, 1.0f, 1.0f, 1.0f }, m_SphericalCoord(10.0f, 45.0f, 45.0f)
 {
-    //-------------------Directory------------------------------//
-
+    //------------------------Path------------------------------//
     app = appData;
     auto shaderPath = app.srcPath + SHADER_FILE;
     
@@ -46,35 +45,32 @@ LightingTest::LightingTest(const AppSystemData& appData)
     auto kaktusMeshPath = app.srcPath + CACTUS_MESH_FILE;
 
     //-------------------Directory------------------------------//
-
     //temp -> put this into scene
     glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -10.0f);
     glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
     float fov = 45.0f;
 
-    //-------------------Init Light------------------------------//
-
+    //-------------------Init Light----------------------------//
     lightPos = glm::vec3(0.0f, 0.5f, 0.0f);
     ambientStrength = 0.1f;
     specularStrength = 1.0f;
     specularPower = 6;
 
-    //-------------------View------------------------------//
-
+    //-----------------------View------------------------------//
     m_Camera = std::make_unique<Camera>();
     m_Camera->OnInit(camPos, target, fov, (float)app.winWidth / (float)app.winHeight, 0.1f, 100.0f);
     m_Proj = m_Camera->GetProjectionMatrix();
     m_View = m_Camera->GetLookAtMatrix();
-    //----------------------------------------------------------------------------------------------//
 
+    //------------------------Meshes--------------------------//
     m_Meshes.push_back(std::make_shared<Mesh>(cthulhuMeshPath));
     m_Materials.push_back(std::make_shared<Material>(shaderPath, cthulhuTexturePath));
 
     m_Meshes.push_back(std::make_shared<Mesh>(kaktusMeshPath));
     m_Materials.push_back(std::make_shared<Material>(shaderPath, kaktusTexturePath));
 
-    m_CurrentMesh = m_Meshes[0];
-    m_CurrentMaterial = m_Materials[0];
+    m_CurrentMesh = m_Meshes[0];        //initialize the mesh use at start
+    m_CurrentMaterial = m_Materials[0]; //initialize the shader and the texture use at start
 
     m_CurrentMesh->Unbind();
     m_CurrentMaterial->Unbind();
@@ -91,8 +87,7 @@ void LightingTest::OnLoop(float deltaTime)
 
 void LightingTest::OnRender()
 {
-    //-------------------------------Camera Spherique----------------------------------------//
-
+    //=============================Camera Spherique===================================//
     r = m_SphericalCoord.x;
     theta = m_SphericalCoord.y;
     phi = m_SphericalCoord.z;
@@ -104,8 +99,7 @@ void LightingTest::OnRender()
     glm::mat4 proj = m_Camera->GetProjectionMatrix();
     glm::mat4 view = m_Camera->GetLookAtMatrix();
 
-    //-------------------------------Shader----------------------------------------//
-
+    //==================================Shader========================================//
     m_CurrentMaterial->Bind();
     m_CurrentMaterial->SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
     m_CurrentMaterial->SetVec3("lightColor", lightColor[0], lightColor[1], lightColor[2]);
@@ -115,8 +109,7 @@ void LightingTest::OnRender()
     m_CurrentMaterial->SetFloat("specularStrength", specularStrength);
     m_CurrentMaterial->SetInt("specularPower", std::pow(2, specularPower));
 
-    //-------------------------------Matrice----------------------------------------//
-
+    //==================================Matrice========================================//
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -134,42 +127,39 @@ void LightingTest::OnRender()
 
 void LightingTest::OnGuiRender()
 {
-    //----------------------------IMGUI WINDOW-------------------------------//
+    //================================IMGUI WINDOW===================================//
     app.pGUI->SetFixedWindowSize(250.0f, 100.0f);
     app.pGUI->PrintFPS(app.pClock->getDeltaTime());
 
-    //----------------------------Model Movement-------------------------------//
-
+    //===============================Model Movement==================================//
     app.pGUI->BeginWindow("Movements", 520.0f, 0.0f, 500.0f, 250.0f);
-    //------------------------------------------------------------------------------------//
+                    //-----------------------------------------//
     app.pGUI->AddSliderFloat3("Translation", m_Translation, -10.0f, 10.0f);
     app.pGUI->AddSliderFloat3("Rotation", m_Rotation, 0.0f, glm::radians(360.0f));
     app.pGUI->AddSliderFloat3("Light Position", lightPos, -10.0f, 10.0f);
-    //--------------Orbital Camera-------------//
+            //-----------------------Orbital Camera---------------------//
     ImGui::Text("Spherical movements");
     app.pGUI->AddSliderFloat("Distance", m_SphericalCoord.x, 0.0f, 10.0f);
     app.pGUI->AddSliderFloat("Longitude", m_SphericalCoord.y, 0.0f, 360.0f);
     app.pGUI->AddSliderFloat("Colatitude", m_SphericalCoord.z, 0.0f, 180.0f);
-    //------------------------------------------------------------------------------------//
+                    //-----------------------------------------//
     app.pGUI->EndWindow();
 
 
-    //----------------------------Light Settings-------------------------------//
-
+    //===============================Light Settings==================================//
     app.pGUI->BeginWindow("Light Settings", app.winWidth - 500.0f, 0.0f, 500.0f, 200.0f);
-    //------------------------------------------------------------------------------------//
+                    //-----------------------------------------//
     app.pGUI->AddSliderFloat("Ambiant Strength", ambientStrength, 0.0f, 1.0f);
     app.pGUI->AddSliderFloat("Specular Strength", specularStrength, 0.0f, 1.0f);
     app.pGUI->AddSliderInt("Specular Power", specularPower, 0, 8);
     app.pGUI->AddColorEdit4("Light Color", lightColor);
-    //-----------------------------------------------------------------------------------//
+                    //-----------------------------------------//
     app.pGUI->EndWindow();
 
 
-    //=========================================================
+    //==============================Mesh Settings===================================//
     app.pGUI->BeginWindow("Mesh", 0.0f, app.winHeight - 90.0f, 250.0f, 90.0f);
-    //-----------------------------------------------//
-
+                    //-----------------------------------------//
     if (app.pGUI->AddButton("Invoke the mighty Cthulhu"))
     {
         m_CurrentMesh = m_Meshes[0];
@@ -180,6 +170,6 @@ void LightingTest::OnGuiRender()
         m_CurrentMesh = m_Meshes[1];
         m_CurrentMaterial = m_Materials[1];
     }
-    //-----------------------------------------------//
+                    //-----------------------------------------//
     app.pGUI->EndWindow();
 }
