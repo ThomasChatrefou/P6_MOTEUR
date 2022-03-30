@@ -9,6 +9,7 @@
 #include "MyTestTexture2D.hpp"
 #include "MyTestMesh3D.hpp"
 #include "MyTestQuantityGen.hpp"
+#include "MyTestOrbitingZoo.hpp"
 
 #include "Camera.hpp"
 #include "Cthulhu.hpp"
@@ -94,6 +95,7 @@ bool Application::OnInit()
     testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", appSystemData);
     testMenu->RegisterTest<MyTestMesh3D>("Mesh 3D", appSystemData);
     testMenu->RegisterTest<MyTestQuantityGen>("Quantity Generation", appSystemData);
+    testMenu->RegisterTest<MyTestOrbitingZoo>("Orbiting Zoo", appSystemData);
     std::cout << std::endl;
 
     std::cout << "==== END INIT ====" << std::endl;

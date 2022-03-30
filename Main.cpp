@@ -1,6 +1,5 @@
-#include "OGLIncludes.hpp"
-#include "GetAppPath.hpp"
 #include "Application.hpp"
+#include "GetAppPath.hpp"
 
 
 extern "C" 

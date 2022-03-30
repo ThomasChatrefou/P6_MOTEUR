@@ -14,11 +14,19 @@ class Material;
 class Camera;
 
 
-class MyTestQuantityGen : public MyTest
+struct Entity
+{
+	int modelID;
+	float aspeed;
+	glm::vec3 sphericalCoord;
+};
+
+
+class MyTestOrbitingZoo : public MyTest
 {
 public:
-	MyTestQuantityGen(const AppSystemData& appData);
-	~MyTestQuantityGen();
+	MyTestOrbitingZoo(const AppSystemData& appData);
+	~MyTestOrbitingZoo();
 
 	void OnLoop(float deltaTime) override;
 	void OnRender() override;
@@ -26,15 +34,17 @@ public:
 
 private:
 
-	float r, theta, phi, avoidanceGap;
-	glm::vec3 m_SphericalCoord;
+	float r, thetaMax, phi, aspeed;
+	float rAmp, phiAmp, aspeedAmp;
+
+	glm::mat4 m_Proj;
+	glm::mat4 m_View;
 
 	int m_nMaxEntities, m_nRenderedEntities, m_nModels;
 	std::unique_ptr<Camera> m_Camera;
 
 	//std::multimap<int, int> m_mmapEntities;
-	std::vector<int> m_Entities;
-	std::vector<glm::mat4> m_MVPs;
+	std::vector<Entity> m_Entities;
 	std::vector<std::shared_ptr<Mesh>> m_Meshes;
 	std::vector<std::shared_ptr<Material>> m_Materials;
 };

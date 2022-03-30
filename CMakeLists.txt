@@ -45,6 +45,7 @@ add_executable(MyEngine			Main.cpp
 	MyTestTexture2D.hpp			MyTestTexture2D.cpp
 	MyTestMesh3D.hpp			MyTestMesh3D.cpp
 	MyTestQuantityGen.hpp		MyTestQuantityGen.cpp
+	MyTestOrbitingZoo.hpp		MyTestOrbitingZoo.cpp
 	MyTexture.hpp				MyTexture.cpp
 	Renderer.hpp				Renderer.cpp
 	Shader.hpp					Shader.cpp
