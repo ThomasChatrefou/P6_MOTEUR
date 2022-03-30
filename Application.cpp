@@ -5,6 +5,7 @@
 #include "GUI.hpp"
 
 #include "MyTest.hpp"
+#include "MyTestSkyBox.hpp"
 #include "MyTestClearColor.hpp"
 #include "MyTestTexture2D.hpp"
 #include "MyTestMesh3D.hpp"
@@ -95,6 +96,7 @@ bool Application::OnInit()
     testMenu->RegisterTest<MyTestTexture2D>("Texture 2D", appSystemData);
     testMenu->RegisterTest<MyTestMesh3D>("Mesh 3D", appSystemData);
     testMenu->RegisterTest<LightingTest>("Test Light", appSystemData);
+    testMenu->RegisterTest<MyTestSkyBox>("SkyBox", appSystemData);
     std::cout << std::endl;
 
     std::cout << "==== END INIT ====" << std::endl;
