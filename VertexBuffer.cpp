@@ -3,6 +3,13 @@
 #include "OGLIncludes.hpp"
 
 
+VertexBuffer::VertexBuffer(unsigned int count) : m_Count(count)
+{
+	glGenBuffers(1, &m_RendererID);
+	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+	glBufferData(GL_ARRAY_BUFFER, count * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
+}
+
 VertexBuffer::VertexBuffer(const float* data, unsigned int count) : m_Count(count)
 {
 	glGenBuffers(1, &m_RendererID);

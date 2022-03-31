@@ -10,9 +10,7 @@
 #include "MyTestMesh3D.hpp"
 #include "MyTestQuantityGen.hpp"
 #include "MyTestOrbitingZoo.hpp"
-
-#include "Camera.hpp"
-#include "Cthulhu.hpp"
+#include "MyTestBatchRendering.hpp"
 
 
 #ifndef ShaderFile
@@ -96,6 +94,7 @@ bool Application::OnInit()
     testMenu->RegisterTest<MyTestMesh3D>("Mesh 3D", appSystemData);
     testMenu->RegisterTest<MyTestQuantityGen>("Quantity Generation", appSystemData);
     testMenu->RegisterTest<MyTestOrbitingZoo>("Orbiting Zoo", appSystemData);
+    testMenu->RegisterTest<MyTestBatchRendering>("Batch Rendering", appSystemData);
     std::cout << std::endl;
 
     std::cout << "==== END INIT ====" << std::endl;
