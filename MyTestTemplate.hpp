@@ -3,11 +3,11 @@
 #include "MyTest.hpp"
 
 
-class MyTestTemplate : public MyTest
+class MyTestSkyBox : public MyTest
 {
 public:
-	MyTestTemplate(const AppSystemData& appData);
-	~MyTestTemplate();
+	MyTestSkyBox(const AppSystemData& appData);
+	~MyTestSkyBox();
 
 	void OnLoop(float deltaTime) override;
 	void OnRender() override;

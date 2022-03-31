@@ -32,6 +32,21 @@ void Material::UpdateMVP(const glm::mat4& mvp)
     m_Shader->Unbind();
 }
 
+void Material::SetVec3(const std::string& name, float v0, float v1, float v2) 
+{
+    m_Shader->SetUniform3f(name, v0, v1, v2);
+}
+
+void Material::SetFloat(const std::string& name, float f0)
+{
+    m_Shader->SetUniform1f(name, f0);
+}
+
+void Material::SetInt(const std::string& name, int i0) 
+{
+    m_Shader->SetUniform1i(name, i0);
+}
+
 void Material::Bind() const
 {
 	m_Shader->Bind();
