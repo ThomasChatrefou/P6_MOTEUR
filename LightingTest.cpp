@@ -7,27 +7,27 @@
 
 #ifndef ShaderFile
 #define ShaderFile
-const std::string SHADER_FILE = "resources/shaders/BasicLighting.shader";
+const std::string SHADER_FILE = "/resources/shaders/BasicLighting.shader";
 #endif // !ShaderFile
 
 #ifndef CthulhuTextureFile
 #define CthulhuTextureFile
-const std::string CTHULHU_TEXTURE_FILE = "resources/textures/Cthulhu_Texture.png";
+const std::string CTHULHU_TEXTURE_FILE = "/resources/textures/Cthulhu_Texture.png";
 #endif // !CthulhuTextureFile
 
 #ifndef CthulhuMeshFile
 #define CthulhuMeshFile
-const std::string CTHULHU_MESH_FILE = "resources/models/Cthulhu.fbx";
+const std::string CTHULHU_MESH_FILE = "/resources/models/Cthulhu.fbx";
 #endif // !CthulhuMeshFile
 
 #ifndef CactusTextureFile
 #define CactusTextureFile
-const std::string CACTUS_TEXTURE_FILE = "resources/textures/Cactus_Texture.png";
+const std::string CACTUS_TEXTURE_FILE = "/resources/textures/Cactus_Texture.png";
 #endif // !CactusTextureFile
 
 #ifndef CactusMeshFile
 #define CactusMeshFile
-const std::string CACTUS_MESH_FILE = "resources/models/Cactus.fbx";
+const std::string CACTUS_MESH_FILE = "/resources/models/Cactus.fbx";
 #endif // !CactusMeshFile
 
 

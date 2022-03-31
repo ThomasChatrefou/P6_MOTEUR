@@ -11,22 +11,8 @@
 #include "MyTestQuantityGen.hpp"
 #include "MyTestOrbitingZoo.hpp"
 #include "MyTestBatchRendering.hpp"
-
-
-#ifndef ShaderFile
-#define ShaderFile
-const std::string SHADER_FILE = "/resources/shaders/Basic.shader";
-#endif // !ShaderFile
-
-#ifndef TextureFile
-#define TextureFile
-const std::string TEXTURE_FILE = "/resources/textures/zote.jpg";
-#endif // !TextureFile
-
-#ifndef CthulhuModelFile
-#define CthulhuModelFile
-const std::string CTHULHU_MODEL_FILE = "/resources/models/Cthulhu.fbx";
-#endif // !CthulhuModelFile
+#include "MyTestSkyBox.hpp"
+#include "LightingTest.hpp"
 
 
 Application::Application(const std::string& appPath, int windowWidth, int windowHeight) :
@@ -95,6 +81,8 @@ bool Application::OnInit()
     testMenu->RegisterTest<MyTestQuantityGen>("Quantity Generation", appSystemData);
     testMenu->RegisterTest<MyTestOrbitingZoo>("Orbiting Zoo", appSystemData);
     testMenu->RegisterTest<MyTestBatchRendering>("Batch Rendering", appSystemData);
+    testMenu->RegisterTest<LightingTest>("Test Light", appSystemData);
+    testMenu->RegisterTest<MyTestSkyBox>("SkyBox", appSystemData);
     std::cout << std::endl;
 
     std::cout << "==== END INIT ====" << std::endl;

@@ -7,12 +7,12 @@
 
 #ifndef FRAGFile
 #define FRAGFile
-const std::string FRAG_FILE = "resources/shaders/SkyboxFShader.glsl";
+const std::string FRAG_FILE = "/resources/shaders/SkyboxFShader.glsl";
 #endif // !ShaderFile
 
 #ifndef VERTEXFile
 #define VERTEXFile
-const std::string VERTEX_FILE = "resources/shaders/SkyboxVShader.shader";
+const std::string VERTEX_FILE = "/resources/shaders/SkyboxVShader.shader";
 #endif // !ShaderFile
 
 MyTestSkyBox::MyTestSkyBox(const AppSystemData& appData)
