@@ -55,7 +55,6 @@ class SkyboxShader
 {
 
 public:
-    static SkyboxShader skyboxShader;
     unsigned int ID;
 
     SkyboxShader(){}
@@ -257,6 +256,12 @@ private:
     unsigned int cubemapTexture;
     unsigned int skyboxVAO, skyboxVBO;
     SkyboxShader skyboxShader;
+    float r, theta, phi;
+    glm::vec3 m_RotatingCamera;
+    glm::vec3 m_CamInitPos;
+    glm::vec3 m_CamInitForward;
+    glm::vec3 m_CamInitRight;
+    glm::vec3 m_CamInitUp;
 
 
 
@@ -264,4 +269,3 @@ private:
     glm::mat4 m_View;
     std::unique_ptr<Camera> m_Camera;
 };
-
