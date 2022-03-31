@@ -29,6 +29,7 @@ public:
     void SetUniform1f(const std::string& name, float value);
     void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
     void SetUniformMat4f(const std::string& name, const glm::mat4 matrix);
+    inline unsigned int GetID() const { return m_RendererID; }
 
 private:
     ShaderProgramSource ParseShader(const std::string& filepath);
