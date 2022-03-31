@@ -20,4 +20,5 @@ public:
 
 	inline int getWidth() const { return m_Width; }
 	inline int getHeight() const { return m_Height; }
+	inline unsigned int getID() const { return m_RendererID; }
 };

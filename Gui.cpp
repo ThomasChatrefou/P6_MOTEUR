@@ -7,7 +7,7 @@
 
 #ifndef FontFile
 #define FontFile
-const std::string FONT_FILE = "dep/imgui/misc/fonts/Cousine-Regular.ttf";
+const std::string FONT_FILE = "/resources/fontsGUI/Cousine-Regular.ttf";
 #endif //FontsPath
 
 
@@ -70,6 +70,7 @@ bool GUI::InitStyle(const std::string& sourcePath)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
 
 	std::string fontPath = sourcePath + FONT_FILE;
+	std::cout << fontPath << std::endl;
 	pFont = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f);
 
 	if (pFont != NULL) return true;
@@ -107,6 +108,11 @@ void GUI::EndWindow()
 bool GUI::AddButton(const std::string& name)
 {
 	return ImGui::Button(name.c_str());
+}
+
+bool GUI::AddSliderInt(const std::string& name, int& value, float min, float max)
+{
+	return ImGui::SliderInt(name.c_str(), &value, min, max);
 }
 
 bool GUI::AddSliderFloat(const std::string& name, float& value, float min, float max)
