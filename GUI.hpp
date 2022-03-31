@@ -34,7 +34,6 @@ public:
 	bool AddSliderFloat(const std::string& name, float& value, float min, float max);
 	bool AddSliderFloat3(const std::string& name, glm::vec3& vector, float min, float max);
 	bool AddColorEdit4(const std::string& name, float* colorArray);
-	bool AddSliderInt(const std::string& name, int& value, float min, float max);
 
 public:
 	void SpeedSlider(float& speed);

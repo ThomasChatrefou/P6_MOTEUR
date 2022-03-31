@@ -16,7 +16,7 @@ private:
 	std::vector<unsigned int> m_Indices;
 
 public:
-	void CreateBuffer(int size, const GLfloat* iData, size_t iSize);
+	void CreateBuffer(const GLfloat* iData, size_t iSize);
 	void BindBufferToAttrib(int attribut, int size, int stride, int arrayOffset);
 	void Vao();
 	

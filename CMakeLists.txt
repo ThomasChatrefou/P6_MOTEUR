@@ -47,6 +47,8 @@ add_executable(MyEngine			Main.cpp
 	MyTestQuantityGen.hpp		MyTestQuantityGen.cpp
 	MyTestOrbitingZoo.hpp		MyTestOrbitingZoo.cpp
 	MyTestBatchRendering.hpp	MyTestBatchRendering.cpp
+	MyTestSkyBox.hpp			MyTestSkyBox.cpp
+	LightingTest.hpp			LightingTest.cpp
 	MyTexture.hpp				MyTexture.cpp
 	Renderer.hpp				Renderer.cpp
 	Shader.hpp					Shader.cpp
