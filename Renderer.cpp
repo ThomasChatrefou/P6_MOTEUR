@@ -21,11 +21,20 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 	glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
 }
 
+
 void Renderer::Draw(const Mesh& mesh, const Material& material) const
 {
 	mesh.Bind();
 	material.Bind();
 	glDrawElements(GL_TRIANGLES, mesh.getIndicesCount(), GL_UNSIGNED_INT, nullptr);
+}
+
+void Renderer::DrawInstanced(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, const unsigned int count) const
+{
+	shader.Bind();
+	va.Bind();
+	ib.Bind();
+	glDrawElementsInstanced(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr, count);
 }
 
 void Renderer::EnableBlending()

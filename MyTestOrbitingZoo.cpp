@@ -137,7 +137,10 @@ void MyTestOrbitingZoo::OnRender()
                 //model = model * glm::lookAt(position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
                 glm::mat4 mvp = m_Proj * m_View * model;
 
-                m_Materials[m_Entities[index].modelID]->UpdateMVP(mvp);
+                m_Materials[m_Entities[index].modelID]->GetShader()->Bind();
+                m_Materials[m_Entities[index].modelID]->GetShader()->SetUniformMat4f("u_MVP",mvp);
+
+                //m_Materials[m_Entities[index].modelID]->UpdateMVP(mvp);
                 app.pRenderer->Draw(*m_Meshes[m_Entities[index].modelID], *m_Materials[m_Entities[index].modelID]);
             }
         }

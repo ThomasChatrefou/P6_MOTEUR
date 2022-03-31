@@ -112,7 +112,7 @@ Mesh::Mesh(const MeshData meshData, bool hasUV, bool hasNormals)
 
 void Mesh::BufferMesh(const MeshData meshData, bool hasUV, bool hasNormals)
 {
-	m_VAO = std::make_unique<VertexArray>();
+	m_VAO = std::make_shared<VertexArray>();
 
 	m_VBO = std::make_unique<VertexBuffer>(meshData.data, meshData.dataCount);
 	VertexBufferLayout layout;

@@ -29,10 +29,10 @@ void Camera::OnInit(glm::vec3& position, glm::vec3& target, float fov, float rat
 
 void Camera::Update()
 {
-    _forward = normalize(_target - _position);
-    _right = normalize(glm::cross(_upGlobal, -_forward));
-    _up = cross(-_forward, _right);
-    _view = lookAt(_position, _target, _upGlobal);
+    _forward = glm::normalize(_target - _position);
+    _right = glm::normalize(glm::cross(_upGlobal, -_forward));
+    _up = glm::cross(-_forward, _right);
+    _view = glm::lookAt(_position, _target, _upGlobal);
 }
 
 void Camera::UpdateProjectionMatrix()

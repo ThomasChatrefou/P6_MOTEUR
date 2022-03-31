@@ -11,6 +11,8 @@
 #include "MyTestQuantityGen.hpp"
 #include "MyTestOrbitingZoo.hpp"
 #include "MyTestBatchRendering.hpp"
+#include "MyTestBatchRendering2D.hpp"
+#include "MyTestBatchRendering3D.hpp"
 #include "MyTestSkyBox.hpp"
 #include "LightingTest.hpp"
 
@@ -81,6 +83,8 @@ bool Application::OnInit()
     testMenu->RegisterTest<MyTestQuantityGen>("Quantity Generation", appSystemData);
     testMenu->RegisterTest<MyTestOrbitingZoo>("Orbiting Zoo", appSystemData);
     testMenu->RegisterTest<MyTestBatchRendering>("Batch Rendering", appSystemData);
+    testMenu->RegisterTest<MyTestBatchRendering2D>("Batch Rendering 2D", appSystemData);
+    testMenu->RegisterTest<MyTestBatchRendering3D>("Batch Rendering 3D", appSystemData);
     testMenu->RegisterTest<LightingTest>("Test Light", appSystemData);
     testMenu->RegisterTest<MyTestSkyBox>("SkyBox", appSystemData);
     std::cout << std::endl;

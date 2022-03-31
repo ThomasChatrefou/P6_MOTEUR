@@ -14,8 +14,11 @@ private:
 
 public:
     void Clear() const;
+
     void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
     void Draw(const Mesh& mesh, const Material& material) const;
+
+    void DrawInstanced(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, const unsigned int count) const;
 
     void EnableBlending();
     void EnableDepthTest();

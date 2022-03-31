@@ -17,16 +17,6 @@
 const std::string SHADER_FILE = "/resources/shaders/Basic.shader";
 #endif // !ShaderFile
 
-#ifndef CthulhuTextureFile
-#define CthulhuTextureFile
-const std::string CTHULHU_TEXTURE_FILE = "/resources/textures/Cthulhu_Texture.png";
-#endif // !CthulhuTextureFile
-
-#ifndef CthulhuMeshFile
-#define CthulhuMeshFile
-const std::string CTHULHU_MESH_FILE = "/resources/models/Cthulhu.fbx";
-#endif // !CthulhuMeshFile
-
 #ifndef ModelsRepositoryPath
 #define ModelsRepositoryPath
 const std::string MODELS_REPOSITORY_PATH = "/resources/models";
@@ -41,8 +31,6 @@ MyTestQuantityGen::MyTestQuantityGen(const AppSystemData& appData)
 {
     app = appData;
     auto shaderPath = app.srcPath + SHADER_FILE;
-    auto texturePath = app.srcPath + CTHULHU_TEXTURE_FILE;
-    auto meshPath = app.srcPath + CTHULHU_MESH_FILE;
 
     std::filesystem::path repo{ app.srcPath + MODELS_REPOSITORY_PATH };
     for (auto const& dir_entry : std::filesystem::recursive_directory_iterator{ repo })

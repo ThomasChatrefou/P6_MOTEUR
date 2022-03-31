@@ -1,8 +1,12 @@
-#include "MyTestBatchRendering.hpp"
+#include "MyTestBatchRendering2D.hpp"
 
 #include "Time.hpp"
 #include "Renderer.hpp"
 #include "GUI.hpp"
+
+#include "Mesh.hpp"
+#include "Material.hpp"
+#include "Camera.hpp"
 
 #include "VertexArray.hpp"
 #include "VertexBuffer.hpp"
@@ -24,7 +28,7 @@ const std::string TEXTURE_2 = "/resources/textures/awesomeface.png";
 #endif // !TextureFile
 
 
-MyTestBatchRendering::MyTestBatchRendering(const AppSystemData& appData)
+MyTestBatchRendering2D::MyTestBatchRendering2D(const AppSystemData& appData)
     : t1(200.0f, 200.0f, 0.0f), t2(500.0f, 200.0f, 0.0f)
 {
     app = appData;
@@ -32,9 +36,16 @@ MyTestBatchRendering::MyTestBatchRendering(const AppSystemData& appData)
     auto texture1 = app.srcPath + TEXTURE_1;
     auto texture2 = app.srcPath + TEXTURE_2;
 
+    
+    float vertices[] = {
+        -100.0f, -100.0f, 0.0f, 0.0f,
+         100.0f, -100.0f, 1.0f, 0.0f,
+         100.0f,  100.0f, 1.0f, 1.0f,
+        -100.0f,  100.0f, 0.0f, 1.0f,
+    };
+
     unsigned int indices[] = {
         0,1,2,2,3,0,
-        4,5,6,6,7,4
     };
 
     m_Proj = glm::ortho(0.0f, (float)app.winWidth, 0.0f, (float)app.winHeight, -1.0f, 1.0f);
@@ -42,12 +53,19 @@ MyTestBatchRendering::MyTestBatchRendering(const AppSystemData& appData)
 
     m_VAO = std::make_unique<VertexArray>();
 
-    m_VBO = std::make_unique<VertexBuffer>(8 * 5);
+    m_VBO = std::make_unique<VertexBuffer>(vertices, 4 * 4);
     VertexBufferLayout layout;
     layout.Push(2);
     layout.Push(2);
-    layout.Push(1);
     m_VAO->AddBuffer(*m_VBO, layout);
+
+    m_DynamicVBO = std::make_unique<VertexBuffer>(2 * 3);
+
+    VertexBufferLayout layout2;
+    layout2.Push(1);
+    layout2.Push(2);
+    m_VAO->AddBuffer(2, *m_DynamicVBO, layout2);
+    
 
     m_IndexBuffer = std::make_unique<IndexBuffer>(indices, 12);
 
@@ -65,29 +83,29 @@ MyTestBatchRendering::MyTestBatchRendering(const AppSystemData& appData)
     m_Shader->Unbind();
 }
 
-MyTestBatchRendering::~MyTestBatchRendering()
+MyTestBatchRendering2D::~MyTestBatchRendering2D()
 {
 }
 
-void MyTestBatchRendering::OnLoop(float deltaTime)
+void MyTestBatchRendering2D::OnLoop(float deltaTime)
 {
 }
 
-void MyTestBatchRendering::OnRender()
+void MyTestBatchRendering2D::OnRender()
 {
     float data[] = {
-           t1.x,          t1.y,          0.0f, 0.0f, 0.0f,
-           t1.x + 200.0f, t1.y,          1.0f, 0.0f, 0.0f,
-           t1.x + 200.0f, t1.y + 200.0f, 1.0f, 1.0f, 0.0f,
-           t1.x,          t1.y + 200.0f, 0.0f, 1.0f, 0.0f,
-
-           t2.x,          t2.y,          0.0f, 0.0f, 1.0f,
-           t2.x + 200.0f, t2.y,          1.0f, 0.0f, 1.0f,
-           t2.x + 200.0f, t2.y + 200.0f, 1.0f, 1.0f, 1.0f,
-           t2.x,          t2.y + 200.0f, 0.0f, 1.0f, 1.0f
+           0.0f, t1.x, t1.y,
+           1.0f, t2.x, t2.y
     };
 
-    glBufferSubData(GL_ARRAY_BUFFER, 0, 8 * 5 * sizeof(float), data);
+    glBindBuffer(GL_ARRAY_BUFFER, m_DynamicVBO->getID());
+    glBufferSubData(GL_ARRAY_BUFFER, 0, 2 * 3 * sizeof(float), data);
+
+    glVertexAttribDivisor(0, 0);
+    glVertexAttribDivisor(1, 0);
+    glVertexAttribDivisor(2, 1);
+    glVertexAttribDivisor(3, 1);
+
 
     glBindTextureUnit(0, m_Texture1->getID());
     glBindTextureUnit(1, m_Texture2->getID());
@@ -96,15 +114,16 @@ void MyTestBatchRendering::OnRender()
     glm::mat4 mvp = m_Proj * m_View * model;
     m_Shader->Bind();
     m_Shader->SetUniformMat4f("u_MVP", mvp);
-    app.pRenderer->Draw(*m_VAO, *m_IndexBuffer, *m_Shader);   
+    app.pRenderer->DrawInstanced(*m_VAO, *m_IndexBuffer, *m_Shader, 2);
+   
 }
 
-void MyTestBatchRendering::OnGuiRender()
+void MyTestBatchRendering2D::OnGuiRender()
 {
     app.pGUI->SetFixedWindowSize(250.0f, 100.0f);
     app.pGUI->PrintFPS(app.pClock->getDeltaTime());
     app.pGUI->BeginWindow("Debug", 520.0f, 0.0f, 500.0f, 100.0f);
-    app.pGUI->AddSliderFloat3("TranslationB", t2, 0.0f, 1000.0f);
     app.pGUI->AddSliderFloat3("TranslationA", t1, 0.0f, 1000.0f);
+    app.pGUI->AddSliderFloat3("TranslationB", t2, 0.0f, 1000.0f);
     app.pGUI->EndWindow();
 }

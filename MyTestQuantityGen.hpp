@@ -32,7 +32,6 @@ private:
 	int m_nMaxEntities, m_nRenderedEntities, m_nModels;
 	std::unique_ptr<Camera> m_Camera;
 
-	//std::multimap<int, int> m_mmapEntities;
 	std::vector<int> m_Entities;
 	std::vector<glm::mat4> m_MVPs;
 	std::vector<std::shared_ptr<Mesh>> m_Meshes;

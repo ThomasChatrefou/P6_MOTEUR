@@ -13,7 +13,7 @@ const std::string TEXTURE_UNIFORM = "u_Texture";
 
 Material::Material(const std::string& shaderPath, const std::string& texturePath)
 {
-    m_Shader = std::make_unique<Shader>(shaderPath);
+    m_Shader = std::make_shared<Shader>(shaderPath);
     m_Shader->Bind();
 
     m_Texture = std::make_unique<MyTexture>(texturePath);

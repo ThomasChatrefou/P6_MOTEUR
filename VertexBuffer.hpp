@@ -25,6 +25,7 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
+	inline unsigned int getID() const { return m_RendererID; }
 	inline unsigned int getCount() const { return m_Count; }
 };
 

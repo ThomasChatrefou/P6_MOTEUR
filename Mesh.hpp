@@ -29,9 +29,12 @@ public:
 
     unsigned int getDataCount() const;
     unsigned int getIndicesCount() const;
+    inline std::shared_ptr<VertexArray> getVAO() const { return m_VAO; }
+    inline std::shared_ptr<IndexBuffer> getIndexBuffer() const { return m_IndexBuffer; }
 
 private:
-    std::unique_ptr<VertexArray> m_VAO;
+    std::shared_ptr<VertexArray> m_VAO;
     std::unique_ptr<VertexBuffer> m_VBO;
-    std::unique_ptr<IndexBuffer> m_IndexBuffer;
+    std::shared_ptr<IndexBuffer> m_IndexBuffer;
+
 };
