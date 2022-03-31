@@ -70,7 +70,7 @@ Mesh::Mesh(const std::string& path)
 		std::cout << "ERROR : Impossible to open file " << path << std::endl;
 		return;
 	}
-	std::cout << "file open" << std::endl;
+	//std::cout << "file open" << std::endl;
 
 	const aiMesh* mesh = scene->mMeshes[0];
 

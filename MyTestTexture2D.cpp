@@ -12,13 +12,12 @@
 
 #ifndef ShaderFile
 #define ShaderFile
-//const std::string SHADER_FILE = "resources/shaders/Basic.shader";
-const std::string SHADER_FILE = "resources/shaders/BasicLightning.shader";
+const std::string SHADER_FILE = "/resources/shaders/Basic.shader";
 #endif // !ShaderFile
 
 #ifndef TextureFile
 #define TextureFile
-const std::string TEXTURE_FILE = "resources/textures/zote.jpg";
+const std::string TEXTURE_FILE = "/resources/textures/zote.jpg";
 #endif // !TextureFile
 
 

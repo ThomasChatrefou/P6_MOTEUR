@@ -15,13 +15,13 @@ class TestMenu;
 class Application : public Inputs
 {
 public:
-    Application(const std::string& sourcePath, int windowWidth, int windowHeight);
+    Application(const std::string& appPath, int windowWidth, int windowHeight);
     ~Application() {}
 
     int OnExecute();
 
 private:
-    std::string m_SourcePath;
+    std::string m_AppPath;
     bool m_AppRunning;
     int m_Width;
     int m_Height;
